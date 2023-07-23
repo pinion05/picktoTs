@@ -9,5 +9,6 @@ const Container = styled.div`
   position: absolute;
   bottom: 0;
   background-color: skyblue;
+  transform: translate(-50%);
 `;
 export default Navbar;
