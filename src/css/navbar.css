@@ -1,0 +1,9 @@
+.iconsvg {
+  width: 25px;
+  height: 25px;
+}
+
+.clicked {
+  fill: rgb(62, 111, 111);
+  color: rgb(62, 111, 111);
+}

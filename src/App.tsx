@@ -3,13 +3,14 @@ import "./App.css";
 import Navbar from "./components/Navbar";
 import { styled } from "styled-components";
 import { Styled } from "styled-components/dist/constructors/constructWithOptions";
+import AppRouther from "./AppRouter";
 
-function App() {
+const App: React.FC = () => {
   return (
     <div className="App">
-      <Navbar></Navbar>
+      <AppRouther />
     </div>
   );
-}
+};
 
 export default App;
