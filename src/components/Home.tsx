@@ -41,9 +41,9 @@ const Home: React.FC = () => {
     }
   });
 
-  console.log(array1); // 첫 번째 집합에 들어간 이미지 배열
-  console.log(array2); // 두 번째 집합에 들어간 이미지 배열
-  console.log(array3); // 세 번째 집합에 들어간 이미지 배열
+  // console.log(array1); // 첫 번째 집합에 들어간 이미지 배열
+  // console.log(array2); // 두 번째 집합에 들어간 이미지 배열
+  // console.log(array3); // 세 번째 집합에 들어간 이미지 배열
 
   return (
     <>

@@ -1,9 +1,10 @@
 import { styled } from "styled-components";
 
 const Post = ({ data }: { data: string }) => {
+  const img: string = data;
   return (
     <Container>
-      <Img src={data} />
+      <Img src={img}></Img>
     </Container>
   );
 };
@@ -14,6 +15,11 @@ const Container = styled.div`
   height: auto;
   background-color: #ffffff;
   margin: 0;
+  :hover {
+    transform: scale(1.1, 1.1);
+    transition: transform.5s;
+    box-shadow: inset 5em 1em gold;
+  }
 `;
 
 const Img = styled.img`

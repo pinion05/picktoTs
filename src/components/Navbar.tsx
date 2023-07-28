@@ -1,23 +1,30 @@
 import { styled } from "styled-components";
-import { ReactComponent as About } from "../data/svg/about.svg";
-import { ReactComponent as About2 } from "../data/svg/about2.svg";
-import { ReactComponent as Bell } from "../data/svg/bell.svg";
-import { ReactComponent as Chat } from "../data/svg/chat.svg";
-import { ReactComponent as Home } from "../data/svg/house.svg";
-import { ReactComponent as Menu } from "../data/svg/menu.svg";
-import { ReactComponent as MenuBurger } from "../data/svg/menu-burger.svg";
-import { ReactComponent as Pick } from "../data/svg/pick.svg";
-import { ReactComponent as Search } from "../data/svg/search.svg";
-import { ReactComponent as Trophy } from "../data/svg/trophy.svg";
-import { ReactComponent as Upload } from "../data/svg/upload.svg";
-import { ReactComponent as User } from "../data/svg/user.svg";
+import { ReactComponent as About } from "../svg/about.svg";
+import { ReactComponent as About2 } from "../svg/about2.svg";
+import { ReactComponent as Bell } from "../svg/bell.svg";
+import { ReactComponent as Chat } from "../svg/chat.svg";
+import { ReactComponent as Home } from "../svg/house.svg";
+import { ReactComponent as Menu } from "../svg/menu.svg";
+import { ReactComponent as MenuBurger } from "../svg/menu-burger.svg";
+import { ReactComponent as Pick } from "../svg/pick.svg";
+import { ReactComponent as Search } from "../svg/search.svg";
+import { ReactComponent as Trophy } from "../svg/trophy.svg";
+import { ReactComponent as Upload } from "../svg/upload.svg";
+import { ReactComponent as User } from "../svg/user.svg";
 import "../css/navbar.css";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Navbar: React.FC = () => {
+  const [selectIcon, setSelectIcon] = useState<number>(0);
+
+  if (useLocation().pathname === "/home") {
+    // setSelectIcon(2);
+    console.log("홈");
+  }
+
   const navigate = useNavigate();
-  const [selectIcon, setSelectIcon] = useState<number>(2);
+
   //
   interface IconInterFace {
     name: string;
@@ -66,14 +73,10 @@ const Navbar: React.FC = () => {
   );
 
   function iconClick(e: any, iconname: string, idx: number): void {
-    setSelectIcon(idx);
     navigate(iconname);
+    setSelectIcon(idx);
   }
 };
-
-function charCalssAdd(e: any, idx: number, className: string) {
-  e.currentTarget.children[idx].classList.add(className);
-}
 
 const Container = styled.div`
   width: 500px;
@@ -82,18 +85,13 @@ const Container = styled.div`
   padding-bottom: 10px;
   position: fixed;
   bottom: 10px;
-  transform: translate(-50%);
+  /* transform: translate(20%); */
   background-color: rgb(255, 255, 255);
   border-radius: 35px;
   display: flex;
   justify-content: space-around;
   align-items: center;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-  .sticky {
-    background-color: yellow;
-    position: sticky;
-    top: 0px;
-  }
 `;
 
 const IconBox = styled.div`
