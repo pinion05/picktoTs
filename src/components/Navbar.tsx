@@ -80,7 +80,7 @@ const Container = styled.div`
   height: auto;
   padding-top: 10px;
   padding-bottom: 10px;
-  position: absolute;
+  position: fixed;
   bottom: 10px;
   transform: translate(-50%);
   background-color: rgb(255, 255, 255);
@@ -89,6 +89,11 @@ const Container = styled.div`
   justify-content: space-around;
   align-items: center;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  .sticky {
+    background-color: yellow;
+    position: sticky;
+    top: 0px;
+  }
 `;
 
 const IconBox = styled.div`
@@ -100,7 +105,7 @@ const IconBox = styled.div`
   align-items: center;
   margin: 0px;
   background-color: rgb(246, 246, 246);
-  border-radius: 27.5px;
+  border-radius: 27.5008px;
 `;
 
 const IconName = styled.p`
@@ -109,3 +114,4 @@ const IconName = styled.p`
   color: ${(props) => props.color};
 `;
 export default Navbar;
+//
