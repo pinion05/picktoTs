@@ -5,7 +5,10 @@ import Login from "./components/Login";
 import Chat from "./components/Chat";
 import Home from "./components/Home";
 import Gallery from "./components/Gallery";
-import Update from "./components/Update";
+import Update from "./components/Upload";
+import PrivateRoute from "./components/PrivateRoute";
+import Profile from "./components/Profile";
+import Upload from "./components/Upload";
 
 const AppRouther = () => {
   return (
@@ -13,10 +16,19 @@ const AppRouther = () => {
       <Container>
         <Routes>
           <Route path="/home" element={<Home />} />
-          <Route path="/update" element={<Update />} />
+          <Route path="/upload" element={<Upload />} />
           <Route path="/gallery" element={<Gallery />} />
           <Route path="/chat" element={<Chat />} />
-          {/* <Route path="/profile" element={<Profile />} /> */}
+          <Route
+            path="/profile"
+            element={
+              <PrivateRoute
+                component={Profile}
+                isAuthenticated={true}
+                path={`/profile`}
+              />
+            }
+          />
           <Route path="/login" element={<Login />} />
         </Routes>
         <Navbar />

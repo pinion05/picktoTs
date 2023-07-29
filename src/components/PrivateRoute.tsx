@@ -12,11 +12,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
   isAuthenticated,
   path,
 }) => {
-  return isAuthenticated ? (
-    <Route path={path} element={<Component />} />
-  ) : (
-    <Navigate to="/login" replace />
-  );
+  return isAuthenticated ? <Component /> : <Navigate to="/login" replace />;
 };
 
 export default PrivateRoute;
