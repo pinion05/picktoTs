@@ -6,7 +6,7 @@ import github from "../img/github.png";
 import google from "../img/google.png";
 import guest from "../img/guest.png";
 
-const Login = () => {
+const Login: React.FC = () => {
   const { loginde, login, logout } = useStore();
 
   interface LoginIcon {
