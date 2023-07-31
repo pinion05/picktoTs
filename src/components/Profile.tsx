@@ -1,12 +1,28 @@
+import img1 from "../img/8machine-_-mTnn1HYD_KU-unsplash.jpg";
+import img2 from "../img/abik-peravan-doW8Spg4Zy8-unsplash.jpg";
+import img3 from "../img/cash-macanaya-u24e_r6BsRE-unsplash.jpg";
+import img4 from "../img/david-emrich-X1Hozg__MiA-unsplash.jpg";
 import { useNavigate } from "react-router-dom";
 import { useStore } from "../store";
 import { useEffect } from "react";
 import { styled } from "styled-components";
 import profileImg from "../img/facebookProfile.png";
+import ArrayContainer from "./ArrayContainer";
 const Profile: React.FC = () => {
   // const navigate = useNavigate();
   // const { loginde, login, logout } = useStore();
-
+  const array1: string[] = [
+    img1,
+    img2,
+    img4,
+    img3,
+    img2,
+    img4,
+    img3,
+    img2,
+    img4,
+    img3,
+  ];
   return (
     <>
       <Container>
@@ -25,6 +41,7 @@ const Profile: React.FC = () => {
             </WrapRow>
           </WrapColumn>
         </Head>
+        <ArrayContainer column={3} imgArray={array1} />
       </Container>
     </>
   );
@@ -33,21 +50,25 @@ const Profile: React.FC = () => {
 export default Profile;
 
 const Container = styled.div`
-  width: 500px;
-  height: 500px;
+  width: auto;
+  height: auto;
   margin-top: 50px;
   border-radius: 20px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
-  outline: 1px solid black;
+  flex-flow: column;
+  align-items: center;
+  justify-content: center;
+  /* outline: black 1px solid; */
+  /* box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3); */
+  /* outline: 1px solid black; */
 `;
 
 const Head = styled.div`
-  width: 100%;
+  width: 500px;
   height: 100px;
-  outline: 1px solid black;
   align-items: center;
   display: flex;
   border-radius: 20px 20px 0px 0px;
+  /* outline: 1px solid black; */
 `;
 
 const ProfileImg = styled.div<{ imgsrc: string }>`
@@ -55,10 +76,10 @@ const ProfileImg = styled.div<{ imgsrc: string }>`
   width: 80px;
   margin: 10px;
   border-radius: 50px;
-  /* background-image: url(${(props) => props.imgsrc}); */
   background-color: yellow;
   background-repeat: no-repeat;
   background-size: contain;
+  /* background-image: url(${(props) => props.imgsrc}); */
 `;
 
 const UserName = styled.p`

@@ -5,22 +5,23 @@ import facebook from "../img/facebook.png";
 import github from "../img/github.png";
 import google from "../img/google.png";
 import guest from "../img/guest.png";
+import { useNavigate } from "react-router-dom";
+import { ProviderIcon } from "../model/ProviderIcon";
+import ProviderButton from "./ProviderButton";
 
 const Login: React.FC = () => {
-  const { loginde, login, logout } = useStore();
-
-  interface LoginIcon {
-    name: string;
-    src: string;
-  }
-
-  const logoImgs: LoginIcon[] = [
+  const logoImgs: ProviderIcon[] = [
     { name: "google", src: google },
     { name: "facebook", src: facebook },
     { name: "github", src: github },
     { name: "apple", src: apple },
     { name: "guest", src: guest },
   ];
+
+  const navigate = useNavigate();
+  function joinClickHandle() {
+    navigate("join");
+  }
   return (
     <>
       <Container>
@@ -33,14 +34,11 @@ const Login: React.FC = () => {
         </div>
         <LoginButton>로그인</LoginButton>
         <Other>
-          <Join>회원가입</Join>
+          <Join onClick={joinClickHandle}>회원가입</Join>
           <FindPW>비밀번호찾기</FindPW>
         </Other>
         {logoImgs.map((obj, idx) => (
-          <ProviderButton key={idx}>
-            <LogoImg src={obj.src} />
-            <Logintxt>Continue with {obj.name} </Logintxt>
-          </ProviderButton>
+          <ProviderButton src={obj.src} name={obj.name} />
         ))}
       </Container>
     </>
@@ -78,14 +76,18 @@ const PWinput = styled.input`
 const LoginButton = styled.button`
   width: 100%;
   height: 50px;
+  cursor: pointer;
   margin-bottom: 20px;
 `;
 const Join = styled.p`
   margin: 0;
+  cursor: pointer;
+  /* color: #a3a3a3; */
 `;
 
 const FindPW = styled.p`
   margin: 0;
+  cursor: pointer;
 `;
 
 const Other = styled.div`
@@ -95,22 +97,4 @@ const Other = styled.div`
   flex-flow: nowrap;
   justify-content: space-around;
   margin-bottom: 20px;
-`;
-const LogoImg = styled.img`
-  width: 25px;
-  height: 25px;
-  margin-left: 10px;
-`;
-const Logintxt = styled.p`
-  margin-left: 100px;
-`;
-
-const ProviderButton = styled.button`
-  width: 100%;
-  height: 6%;
-  display: flex;
-  align-items: center;
-  border-radius: 10px;
-  margin-bottom: 10px;
-  padding: 20px;
 `;

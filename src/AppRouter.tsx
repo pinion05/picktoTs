@@ -9,6 +9,7 @@ import Update from "./components/Upload";
 import PrivateRoute from "./components/PrivateRoute";
 import Profile from "./components/Profile";
 import Upload from "./components/Upload";
+import Join from "./components/Join";
 
 const AppRouther = () => {
   return (
@@ -19,12 +20,13 @@ const AppRouther = () => {
           <Route path="/upload" element={<Upload />} />
           <Route path="/gallery" element={<Gallery />} />
           <Route path="/chat" element={<Chat />} />
+          <Route path="/login/join" element={<Join />} />
           <Route
             path="/profile"
             element={
               <PrivateRoute
                 component={Profile}
-                isAuthenticated={true}
+                isAuthenticated={false}
                 path={`/profile`}
               />
             }

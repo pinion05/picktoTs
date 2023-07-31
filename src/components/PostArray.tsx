@@ -19,5 +19,6 @@ export default PostArray;
 
 const Contianer = styled.div`
   display: flex;
+  /* outline: solid 1px gray; */
   flex-flow: column;
 `;

@@ -33,20 +33,20 @@ const ArrayContainer: React.FC<ArrayContainerProps> = ({
 
   lngthTimeImgArray(1).forEach((image, index) => {
     if (index % 3 === 0) {
-      array1.push(image);
+      array3.push(image);
     } else if (index % 3 === 1) {
       array2.push(image);
     } else {
-      array3.push(image);
+      array1.push(image);
     }
   });
 
   return (
     <>
       <Container>
-        <PostArray data={array1} />
-        <PostArray data={array2} />
-        <PostArray data={array3} />
+        {[array1, array2, array3].map((array) => (
+          <PostArray data={array} />
+        ))}
       </Container>
     </>
   );
@@ -55,8 +55,8 @@ const ArrayContainer: React.FC<ArrayContainerProps> = ({
 export default ArrayContainer;
 
 const Container = styled.div`
-  width: auto;
-  height: 30000px;
-  background-color: yellow;
+  /* background-color: yellow; */
   display: flex;
+  /* outline: 1px solid red; */
+  flex-flow: row nowrap;
 `;
