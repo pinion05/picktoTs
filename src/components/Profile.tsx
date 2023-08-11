@@ -9,6 +9,8 @@ import { styled } from "styled-components";
 import profileImg from "../img/facebookProfile.png";
 import ArrayContainer from "./ArrayContainer";
 const Profile: React.FC = () => {
+  const { loginConditon, logout, login, setUserName, userName } = useStore();
+
   // const navigate = useNavigate();
   // const { loginde, login, logout } = useStore();
   const array1: string[] = [
@@ -30,7 +32,7 @@ const Profile: React.FC = () => {
           <ProfileImg imgsrc={profileImg} />
           <WrapColumn style={{ justifyContent: "space-around" }}>
             <WrapRow>
-              <UserName>{`username`}</UserName>
+              <UserName>{`${userName}`}</UserName>
               <Button>프로필 수정</Button>
             </WrapRow>
             <WrapRow>

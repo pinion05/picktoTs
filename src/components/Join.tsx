@@ -1,63 +1,73 @@
+import React from "react";
 import { useState } from "react";
 import { styled } from "styled-components";
-import { getAuth, createUserWithEmailAndPassword, Auth } from "firebase/auth";
-import { app } from "../fbase";
+import { css as stCss } from "styled-components";
+import { Button } from "@mui/material";
+import { css } from "@emotion/react";
 
 const Join = () => {
-  app();
-  const auth = getAuth();
   //
+  const [nickName, setNickName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   //
 
-  function onChangeHandle(e: any, k: string) {
+  function inputOnChange(e: any, k: string) {
     if (k === `email`) setEmail(e.target.value);
     if (k === `pw`) setPassword(e.target.value);
   }
 
-  function joinButtonClickHandle() {
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        alert("회원가입되었습니다. 자동으로 로그인됩니다");
-        // Signed in
-        const user = userCredential.user;
-        // ...
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // ..
-      });
+  function changeNikcname(e: React.ChangeEvent<HTMLInputElement>) {
+    setNickName(e.target.value);
+  }
+
+  function hadleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    console.log("서밋");
+  }
+
+  function isValidEmail(email: string) {
+    const regex = /^[\w-_.]+@([\w-]+\.)+[\w-]{2,4}$/;
+    return regex.test(email);
   }
 
   return (
     <>
-      <Container>
-        <p>회원가입</p>
-        <p>이메일</p>
-        <EmailInput
+      <i className="fi fi-rr-eye"></i>
+      <Button />
+      <Container onSubmit={(e) => hadleSubmit(e)}>
+        <p className="marginbot">회원가입</p>
+        <Text>닉네임</Text>
+        <Input type="text" placeholder="닉네임" />
+        <Text>이메일</Text>
+        <Input
           value={email}
           placeholder="이메일"
-          onChange={(e) => onChangeHandle(e, `email`)}
+          onChange={(e) => inputOnChange(e, `email`)}
         />
-
-        <p>비밀번호</p>
-        <PWinput
+        <Text>비밀번호</Text>
+        <Input
           value={password}
-          type="text"
+          type="password"
           placeholder="비밀번호"
-          onChange={(e) => onChangeHandle(e, `pw`)}
+          onChange={(e) => inputOnChange(e, `pw`)}
         />
-        <JoinButton onClick={() => joinButtonClickHandle()}>
-          회원가입
-        </JoinButton>
+        <JoinButton type="submit">회원가입</JoinButton>
       </Container>
     </>
   );
 };
 export default Join;
-const Container = styled.div`
+
+const marginbot = stCss`
+  margin-bottom: 5px;
+`;
+
+const Text = styled.p`
+  ${marginbot}
+`;
+
+const Container = styled.form`
   width: 400px;
   height: auto;
   background-color: #ffffff;
@@ -69,27 +79,17 @@ const Container = styled.div`
   padding: 20px;
 `;
 
-const IDinput = styled.input`
+const Input = styled.input`
   height: 25px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   padding: 5px;
   border-radius: 5px;
 `;
-const EmailInput = styled.input`
-  height: 25px;
-  margin-bottom: 20px;
-  padding: 5px;
-  border-radius: 5px;
-`;
-const PWinput = styled.input`
-  height: 25px;
-  margin-bottom: 30px;
-  padding: 5px;
-  border-radius: 5px;
-`;
+
 const JoinButton = styled.button`
   width: 100%;
   height: 50px;
   cursor: pointer;
   margin-bottom: 10px;
+  background-color: #ffffff;
 `;

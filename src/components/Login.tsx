@@ -17,14 +17,16 @@ const Login: React.FC = () => {
     { name: "apple", src: apple },
     { name: "guest", src: guest },
   ];
-
+  function submitContainer(e: any) {
+    e.preventDefault();
+  }
   const navigate = useNavigate();
-  function joinClickHandle() {
-    navigate("join");
+  function joinClick() {
+    navigate("/join");
   }
   return (
     <>
-      <Container>
+      <Container onSubmit={submitContainer}>
         <Title>로그인 또는 회원가입</Title>
         <IDinput placeholder="아이디" />
         <PWinput placeholder="비밀번호" />
@@ -34,7 +36,7 @@ const Login: React.FC = () => {
         </div>
         <LoginButton>로그인</LoginButton>
         <Other>
-          <Join onClick={joinClickHandle}>회원가입</Join>
+          <Join onClick={joinClick}>회원가입</Join>
           <FindPW>비밀번호찾기</FindPW>
         </Other>
         {logoImgs.map((obj, idx) => (
@@ -46,7 +48,7 @@ const Login: React.FC = () => {
 };
 export default Login;
 
-const Container = styled.div`
+const Container = styled.form`
   width: 400px;
   height: 600px;
   background-color: #ffffff;
