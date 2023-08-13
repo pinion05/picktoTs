@@ -8,8 +8,18 @@ import guest from "../img/guest.png";
 import { useNavigate } from "react-router-dom";
 import { ProviderIcon } from "../model/ProviderIcon";
 import ProviderButton from "./ProviderButton";
+import { Button, Input } from "@mui/material";
+import { log } from "console";
+import { Spacing } from "../styledComponent";
+import axios from "axios";
+import React, { ChangeEvent, useEffect, useState } from "react";
 
 const Login: React.FC = () => {
+  const { loginConditon, logout, login } = useStore();
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+
+  //
   const logoImgs: ProviderIcon[] = [
     { name: "google", src: google },
     { name: "facebook", src: facebook },
@@ -24,23 +34,61 @@ const Login: React.FC = () => {
   function joinClick() {
     navigate("/join");
   }
+
+  function clickLogin() {
+    console.log("로그인됨");
+    const data = {
+      email: email,
+    };
+    axios.get("http://localhost:5000/api/", data);
+    login();
+    navigate("/profile");
+  }
+  function changeId(
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) {
+    setEmail(e.target.value);
+  }
+
+  function changePassword(
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) {
+    setPassword(e.target.value);
+  }
+
   return (
     <>
+      <Spacing height="100px" />
       <Container onSubmit={submitContainer}>
-        <Title>로그인 또는 회원가입</Title>
-        <IDinput placeholder="아이디" />
-        <PWinput placeholder="비밀번호" />
+        <span>로그인</span>
+        <Spacing height="15px" />
+        <Input
+          placeholder="이메일"
+          value={email}
+          onChange={(e) => changeId(e)}
+        />
+        <Spacing height="15px" />
+        <Input
+          placeholder="비밀번호"
+          value={password}
+          onChange={(e) => changePassword(e)}
+        />
         <div style={{ display: `flex` }}>
-          <input type="checkbox" style={{ marginRight: `5px` }} />
+          <input type="checkbox" />
+          <Spacing width="10px" />
           <p>로그인상태유지</p>
         </div>
-        <LoginButton>로그인</LoginButton>
+        <Button onClick={(e) => clickLogin()}>로그인</Button>
+        <Spacing height="10px" />
         <Other>
           <Join onClick={joinClick}>회원가입</Join>
           <FindPW>비밀번호찾기</FindPW>
         </Other>
         {logoImgs.map((obj, idx) => (
-          <ProviderButton src={obj.src} name={obj.name} />
+          <>
+            <Spacing height="10px" />
+            <ProviderButton src={obj.src} name={obj.name} />
+          </>
         ))}
       </Container>
     </>
@@ -50,9 +98,8 @@ export default Login;
 
 const Container = styled.form`
   width: 400px;
-  height: 600px;
+  height: 100%;
   background-color: #ffffff;
-  margin-top: 100px;
   border-radius: 20px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
   flex-flow: column;
@@ -60,27 +107,6 @@ const Container = styled.form`
   padding: 20px;
 `;
 
-const Title = styled.p`
-  margin-bottom: 20px;
-`;
-const IDinput = styled.input`
-  height: 25px;
-  margin-bottom: 20px;
-  padding: 5px;
-  border-radius: 5px;
-`;
-const PWinput = styled.input`
-  height: 25px;
-  margin-bottom: 10px;
-  padding: 5px;
-  border-radius: 5px;
-`;
-const LoginButton = styled.button`
-  width: 100%;
-  height: 50px;
-  cursor: pointer;
-  margin-bottom: 20px;
-`;
 const Join = styled.p`
   margin: 0;
   cursor: pointer;
@@ -98,5 +124,4 @@ const Other = styled.div`
   display: flex;
   flex-flow: nowrap;
   justify-content: space-around;
-  margin-bottom: 20px;
 `;

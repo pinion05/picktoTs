@@ -34,6 +34,7 @@ const Profile: React.FC = () => {
             <WrapRow>
               <UserName>{`${userName}`}</UserName>
               <Button>프로필 수정</Button>
+              <button onClick={() => logout()}>로그아웃</button>
             </WrapRow>
             <WrapRow>
               <UserName>{`username`}</UserName>

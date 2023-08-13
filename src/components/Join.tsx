@@ -6,13 +6,19 @@ import { Button, Input } from "@mui/material";
 import { css } from "@emotion/react";
 import { green } from "@mui/material/colors";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useStore } from "../store";
+import { Spacing, Wrap } from "../styledComponent";
 
 const Join = () => {
   //
+  const navigate = useNavigate();
   const [nickname, setNickname] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [passwordCheck, setPasswordCheck] = useState<string>("");
+  //
+  const { loginConditon, logout, login } = useStore();
 
   //
 
@@ -38,22 +44,24 @@ const Join = () => {
         data
       );
       console.log(resqonse.data);
+      alert("자동으로 로그인됩니다");
+      login();
+      navigate("/profile");
     } catch (err) {
       console.log(err);
     }
   }
-
   function changeInput(
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     k: string
   ) {
-    if (k === `nick`) setPasswordCheck(e.target.value);
+    if (k === `nick`) setNickname(e.target.value);
     if (k === `email`) setEmail(e.target.value);
     if (k === `pw`) setPassword(e.target.value);
     if (k === `pwc`) changePasswordCheck(e);
   }
 
-  function changePasswordCheck(
+  function changePasswordCheck( //*비밀번호 무결성 검사
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) {
     setPasswordCheck(e.target.value);
@@ -66,21 +74,25 @@ const Join = () => {
 
   return (
     <>
+      <Spacing height="100px" />
       <Container onSubmit={(e) => hadleSubmit(e)}>
         <p className="marginbot">회원가입</p>
-        <Text>닉네임</Text>
+
+        <span>닉네임</span>
+
         <Input
           type="text"
           placeholder="닉네임을 입력하세요"
           onChange={(e) => changeInput(e, "nick")}
         />
-        <Text>이메일</Text>
+        <Spacing height="10px"></Spacing>
+        <span>이메일</span>
         <Input
           value={email}
           placeholder="abcd@gmail.com"
           onChange={(e) => changeInput(e, `email`)}
         />
-        <Text>비밀번호 </Text>
+        <p>비밀번호 </p>
         <Input
           value={password}
           type="text"
@@ -94,6 +106,7 @@ const Join = () => {
           placeholder="비밀번호 확인"
           type="password"
         />
+        <Spacing height="25px" />
         <Button type="submit">회원가입</Button>
       </Container>
     </>
@@ -101,19 +114,10 @@ const Join = () => {
 };
 export default Join;
 
-const marginbot = stCss`
-  margin-bottom: 5px;
-`;
-
-const Text = styled.p`
-  ${marginbot}
-`;
-
 const Container = styled.form`
   width: 400px;
   height: auto;
   background-color: #ffffff;
-  margin-top: 100px;
   border-radius: 20px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
   flex-flow: column;
@@ -121,17 +125,9 @@ const Container = styled.form`
   padding: 20px;
 `;
 
-// const Input = styled.input`
-//   height: 25px;
-//   margin-bottom: 10px;
-//   padding: 5px;
-//   border-radius: 5px;
-// `;
-
 const JoinButton = styled.button`
   width: 100%;
   height: 50px;
   cursor: pointer;
-  margin-bottom: 10px;
   background-color: #ffffff;
 `;
