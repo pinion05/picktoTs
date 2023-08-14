@@ -36,13 +36,30 @@ const Login: React.FC = () => {
   }
 
   function clickLogin() {
-    console.log("로그인됨");
-    const data = {
-      email: email,
-    };
-    axios.get("http://localhost:5000/api/", data);
-    login();
-    navigate("/profile");
+    emailPasswordRequset();
+  }
+
+  async function emailPasswordRequset() {
+    try {
+      const response = await axios.post("http://localhost:5000/api/login", {
+        email: email,
+        password: password,
+      });
+      if (response.status === 200) {
+        login();
+        console.log("유저 정보:", response.data);
+
+        navigate("/profile");
+        return response.data[0];
+
+        // 결과를 반환합니다.
+      } else {
+        console.log("유저 정보를 조회하는데 실패했습니다:", response.data);
+        return null;
+      }
+    } catch (err) {
+      console.log(err);
+    }
   }
   function changeId(
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -69,6 +86,7 @@ const Login: React.FC = () => {
         />
         <Spacing height="15px" />
         <Input
+          type="password"
           placeholder="비밀번호"
           value={password}
           onChange={(e) => changePassword(e)}
