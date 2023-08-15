@@ -35,8 +35,17 @@ const Login: React.FC = () => {
     navigate("/join");
   }
 
-  function clickLogin() {
-    emailPasswordRequset();
+  async function clickLogin() {
+    try {
+      const userInfo = await emailPasswordRequset();
+      if (userInfo.password === password) {
+        login();
+        navigate("/profile");
+        console.log("유저정보 일치");
+      }
+    } catch {
+      console.log("로그인 실패함");
+    }
   }
 
   async function emailPasswordRequset() {
@@ -46,10 +55,7 @@ const Login: React.FC = () => {
         password: password,
       });
       if (response.status === 200) {
-        login();
-        console.log("유저 정보:", response.data);
-
-        navigate("/profile");
+        console.log("유저 정보:", response.data[0]);
         return response.data[0];
 
         // 결과를 반환합니다.
@@ -61,6 +67,7 @@ const Login: React.FC = () => {
       console.log(err);
     }
   }
+
   function changeId(
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) {
