@@ -8,9 +8,19 @@ import { useEffect } from "react";
 import { styled } from "styled-components";
 import profileImg from "../img/facebookProfile.png";
 import ArrayContainer from "./ArrayContainer";
+import { Wrap } from "../styledComponent";
+import { Button } from "@mui/material";
 const Profile: React.FC = () => {
   const { loginConditon, logout, login, setUserName, userName } = useStore();
 
+  function clickLogout() {
+    logout();
+    sessionStorage.clear();
+  }
+
+  useEffect(() => {
+    setUserName(sessionStorage.userName);
+  }, []);
   // const navigate = useNavigate();
   // const { loginde, login, logout } = useStore();
   const array1: string[] = [
@@ -30,19 +40,15 @@ const Profile: React.FC = () => {
       <Container>
         <Head>
           <ProfileImg imgsrc={profileImg} />
-          <WrapColumn style={{ justifyContent: "space-around" }}>
-            <WrapRow>
+          <Wrap dir="clumn" style={{ justifyContent: "space-around" }}>
+            <Wrap dir="row">
               <UserName>{`${userName}`}</UserName>
               <Button>프로필 수정</Button>
-              <button onClick={() => logout()}>로그아웃</button>
-            </WrapRow>
-            <WrapRow>
-              <UserName>{`username`}</UserName>
-            </WrapRow>
-            <WrapRow>
-              <UserName>{`username`}</UserName>
-            </WrapRow>
-          </WrapColumn>
+              <Button onClick={() => clickLogout()}>로그아웃</Button>
+            </Wrap>
+            <Wrap dir="row">{/* <UserName>{`username`}</UserName> */}</Wrap>
+            <Wrap dir="row">{/* <UserName>{`username`}</UserName> */}</Wrap>
+          </Wrap>
         </Head>
         <ArrayContainer column={3} imgArray={array1} />
       </Container>
@@ -88,23 +94,4 @@ const ProfileImg = styled.div<{ imgsrc: string }>`
 const UserName = styled.p`
   margin: 0;
   margin-right: 10px;
-`;
-
-const WrapRow = styled.div`
-  display: flex;
-  flex-flow: row;
-`;
-
-const WrapColumn = styled.div`
-  display: flex;
-  flex-flow: column;
-  height: 100%;
-`;
-
-const Button = styled.button`
-  background-color: #b2c7ff;
-  outline: none;
-  border: none;
-  height: auto;
-  border-radius: 8px;
 `;

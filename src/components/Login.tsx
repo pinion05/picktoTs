@@ -42,6 +42,8 @@ const Login: React.FC = () => {
         login();
         navigate("/profile");
         console.log("유저정보 일치");
+        sessionStorage.clear();
+        sessionStorage.setItem("userName", userInfo.nickname);
       }
     } catch {
       console.log("로그인 실패함");
@@ -57,7 +59,6 @@ const Login: React.FC = () => {
       if (response.status === 200) {
         console.log("유저 정보:", response.data[0]);
         return response.data[0];
-
         // 결과를 반환합니다.
       } else {
         console.log("유저 정보를 조회하는데 실패했습니다:", response.data);

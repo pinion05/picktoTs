@@ -29,7 +29,11 @@ const Join = () => {
 
   function hadleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    postRequest();
+    if (password === password && isValidEmail(email)) {
+      postRequest();
+    } else {
+      alert("형식이 잘못되었습니다.");
+    }
   }
 
   async function postRequest() {
