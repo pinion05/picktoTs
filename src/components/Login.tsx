@@ -46,7 +46,11 @@ const Login: React.FC = () => {
         sessionStorage.setItem("userName", userInfo.nickname);
       }
     } catch {
-      console.log("로그인 실패함");
+      if (email === "") {
+        alert("이메일을 입력해주세요");
+      } else {
+        console.log("로그인 실패함");
+      }
     }
   }
 
