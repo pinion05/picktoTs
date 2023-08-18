@@ -35,15 +35,24 @@ const Login: React.FC = () => {
     navigate("/join");
   }
 
+  function isValidEmail(email: string) {
+    const regex = /^[\w-_.]+@([\w-]+\.)+[\w-]{2,4}$/;
+    return regex.test(email);
+  }
+
   async function clickLogin() {
     try {
       const userInfo = await emailPasswordRequset();
       if (userInfo.password === password) {
-        login();
-        navigate("/profile");
-        console.log("유저정보 일치");
-        sessionStorage.clear();
-        sessionStorage.setItem("userName", userInfo.nickname);
+        if (isValidEmail(email)) {
+          login();
+          navigate("/profile");
+          console.log("유저정보 일치");
+          sessionStorage.clear();
+          sessionStorage.setItem("userName", userInfo.nickname);
+        } else {
+          alert("이메일 형식이 맞지 않습니다.");
+        }
       }
     } catch {
       if (email === "") {
