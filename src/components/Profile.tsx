@@ -44,6 +44,7 @@ const Profile: React.FC = () => {
             <Wrap dir="row">
               <UserName>{`${userName}`}</UserName>
               <Button>프로필 수정</Button>
+              <Button>업로드</Button>
               <Button onClick={() => clickLogout()}>로그아웃</Button>
             </Wrap>
             <Wrap dir="row">{/* <UserName>{`username`}</UserName> */}</Wrap>
