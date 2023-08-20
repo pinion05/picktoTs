@@ -1,11 +1,12 @@
 import React from "react";
 import { styled } from "styled-components";
+import { onFileUpload } from "../awsS3";
 
 const Upload: React.FC = () => {
   return (
     <>
       <>
-        <ImgUpload type="file" />
+        <ImgUpload type="file" onChange={onFileUpload} />
       </>
     </>
   );
