@@ -82,9 +82,7 @@ const Login: React.FC = () => {
     }
   }
 
-  function changeId(
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) {
+  function changeId(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     setEmail(e.target.value);
   }
 

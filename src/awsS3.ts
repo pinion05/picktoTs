@@ -1,8 +1,7 @@
 import AWS from "aws-sdk";
-import React from "react";
 import s3config from "./s3config.json";
 
-export async function onFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
+export async function onFileUpload(file: File) {
   const ACCESS_KEY = s3config.accessKey;
   const SECRET_ACCESS_KEY = s3config.secretAccessKey;
   const REGION = s3config.region;
@@ -20,24 +19,20 @@ export async function onFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
     region: REGION,
   });
 
-  if (e.target.files && e.target.files.length > 0) {
-    const file = e.target.files[0];
+  // 파일과 파일 이름을 넘겨주면 됩니다.
+  const params = {
+    ACL: "public-read",
+    Body: file,
+    Bucket: S3_BUCKET,
+    Key: file.name,
+  };
 
-    // 파일과 파일 이름을 넘겨주면 됩니다.
-    const params = {
-      ACL: "public-read",
-      Body: file,
-      Bucket: S3_BUCKET,
-      Key: file.name,
-    };
-
-    myBucket
-      .putObject(params)
-      .on("httpUploadProgress", (evt) => {
-        alert("SUCCESS");
-      })
-      .send((err) => {
-        if (err) console.log(err);
-      });
-  }
+  myBucket
+    .putObject(params)
+    .on("httpUploadProgress", (evt) => {
+      alert("SUCCESS");
+    })
+    .send((err) => {
+      if (err) console.log(err);
+    });
 }
