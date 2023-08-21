@@ -1,11 +1,12 @@
 import AWS from "aws-sdk";
 import React from "react";
+import s3config from "./s3config.json";
 
-export function onFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
-  const ACCESS_KEY = "AKIA2COGNVKHVSTX2ZKY";
-  const SECRET_ACCESS_KEY = "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";
-  const REGION = "ap-northeast-2";
-  const S3_BUCKET = "testbucket12342563";
+export async function onFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
+  const ACCESS_KEY = s3config.accessKey;
+  const SECRET_ACCESS_KEY = s3config.secretAccessKey;
+  const REGION = s3config.region;
+  const S3_BUCKET = s3config.Bucket;
 
   // AWS ACCESS KEY를 세팅합니다.
   AWS.config.update({
