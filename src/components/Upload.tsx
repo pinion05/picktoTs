@@ -1,9 +1,10 @@
-import React, { FormEvent, useRef } from "react";
+import React, { FormEvent, useRef, useState } from "react";
 import { styled } from "styled-components";
 import { onFileUpload } from "../awsS3";
 import { Button } from "@mui/material";
 
 const Upload: React.FC = () => {
+  const [newImg, setNewImg] = useState<string>("");
   function submitForm(e: FormEvent) {
     e.preventDefault();
     if (imgRef.current !== null && imgRef.current.files) {
@@ -12,22 +13,25 @@ const Upload: React.FC = () => {
       let newFile: File | null = null;
       switch (fileExtension) {
         case "jpg": //jpg일 경우
-          newFile = new File([oldFile], `변경이름.jpg`, {
-            type: oldFile.type,
-          }); // File생성자를 이용해서 oldFile의 이름을 바꿔준다
-          // setImgs((prev) => [...prev, newFile]); // 저장
-          break;
-        case "png":
-          newFile = new File([oldFile], `변경이름.png`, {
+          newFile = new File([oldFile], `${"변경이름"}.jpg`, {
             type: oldFile.type,
           });
-          // setImgs((prev) => [...prev, newFile]);
+          break;
+        case "png": //png일 경우
+          newFile = new File([oldFile], `${"변경이름"}.png`, {
+            type: oldFile.type,
+          });
           break;
         default:
           alert("지원하지 않는 파일 형식입니다.");
           break;
       }
-      console.log(newFile?.name);
+      if (newFile) {
+        console.log(newFile?.name);
+        console.log(`${URL.createObjectURL(newFile)}`);
+        setNewImg(URL.createObjectURL(newFile));
+        onFileUpload(newFile);
+      }
     }
   }
   const imgRef = useRef<HTMLInputElement>(null);
@@ -35,6 +39,7 @@ const Upload: React.FC = () => {
   return (
     <>
       <form onSubmit={(e) => submitForm(e)}>
+        <img width={"100px"} src={newImg} alt="" />
         <ImgUpload ref={imgRef} type="file" />
         <Button type="submit">업로드</Button>
       </form>
