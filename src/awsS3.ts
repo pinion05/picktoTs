@@ -1,21 +1,16 @@
 import AWS from "aws-sdk";
 import s3config from "./s3config.json";
-import { data } from "autoprefixer";
-
-const ACCESS_KEY = s3config.accessKey;
-const SECRET_ACCESS_KEY = s3config.secretAccessKey;
-const REGION = s3config.region;
-const S3_BUCKET = s3config.Bucket;
 
 const myBucket = new AWS.S3({
-  params: { Bucket: S3_BUCKET },
-  region: REGION,
+  params: { Bucket: s3config.Bucket },
+  region: s3config.region,
 });
 
 // AWS ACCESS KEY를 세팅합니다.
 AWS.config.update({
-  accessKeyId: ACCESS_KEY,
-  secretAccessKey: SECRET_ACCESS_KEY,
+  accessKeyId: s3config.accessKey,
+  secretAccessKey: s3config.secretAccessKey,
+  region: s3config.region,
 });
 
 export async function onFileUpload(file: File) {
@@ -23,7 +18,7 @@ export async function onFileUpload(file: File) {
     .putObject({
       ACL: "public-read",
       Body: file,
-      Bucket: S3_BUCKET,
+      Bucket: s3config.Bucket,
       Key: file.name,
     })
     .on("httpUploadProgress", (evt) => {
@@ -34,24 +29,45 @@ export async function onFileUpload(file: File) {
     });
 }
 
-export async function readList() {
-  try {
-    const list = await myBucket.listObjects({ Bucket: S3_BUCKET }).promise();
-    return list;
-  } catch (err) {
-    console.error(err);
-    throw err;
-  }
-}
+//*async로 구현하기
+// export async function readList() {
+//   try {
+//     const list = await myBucket
+//       .listObjects({ Bucket: s3config.Bucket })
+//       .promise();
+//     return list;
+//   } catch (err) {
+//     console.error("error is" + err);
+//     throw err;
+//   }
+// }
 
-export async function readObject(key: string) {
-  try {
-    const data = await myBucket
-      .getObject({ Bucket: S3_BUCKET, Key: key })
-      .promise();
-    return data;
-  } catch (err) {
-    console.error(err);
-    throw err;
-  }
+export function readList() {
+  myBucket.listObjects({ Bucket: s3config.Bucket }, (err, data) => {
+    console.log(data);
+  });
+}
+//*async로 구현하기
+// export async function readObject(key: string) {
+//   try {
+//     const data = await myBucket
+//       .getObject({ Bucket: s3config.Bucket, Key: key })
+//       .promise();
+//     return data;
+//   } catch (err) {
+//     console.error(err);
+//     throw err;
+//   }
+// }
+
+export function readObject(key: string) {
+  myBucket.getObject(
+    { Bucket: s3config.Bucket, Key: "test.png" },
+    (err, data) => {
+      console.log(data);
+      if (err) {
+        console.error(err);
+      }
+    }
+  );
 }

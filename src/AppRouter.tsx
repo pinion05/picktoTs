@@ -18,7 +18,16 @@ const AppRouther = () => {
       <Container>
         <Routes>
           <Route path="/home" element={<Home />} />
-          <Route path="/upload" element={<Upload />} />
+          <Route
+            path="/upload"
+            element={
+              <PrivateRoute
+                component={Upload}
+                isAuthenticated={loginConditon}
+                path={`/upload`}
+              />
+            }
+          />
           <Route path="/gallery" element={<Gallery />} />
           <Route path="/chat" element={<Chat />} />
           {/* <Route path="/join" element={}></Route> */}
