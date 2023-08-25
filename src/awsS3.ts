@@ -7,13 +7,13 @@ const myBucket = new AWS.S3({
 });
 
 // AWS ACCESS KEY를 세팅합니다.
-AWS.config.update({
-  accessKeyId: s3config.accessKey,
-  secretAccessKey: s3config.secretAccessKey,
-  region: s3config.region,
-});
 
 export async function onFileUpload(file: File) {
+  AWS.config.update({
+    accessKeyId: s3config.accessKey,
+    secretAccessKey: s3config.secretAccessKey,
+    region: s3config.region,
+  });
   myBucket
     .putObject({
       ACL: "public-read",
@@ -43,6 +43,11 @@ export async function onFileUpload(file: File) {
 // }
 
 export function readList() {
+  AWS.config.update({
+    accessKeyId: s3config.accessKey,
+    secretAccessKey: s3config.secretAccessKey,
+    region: s3config.region,
+  });
   myBucket.listObjects({ Bucket: s3config.Bucket }, (err, data) => {
     console.log(data);
   });
@@ -61,6 +66,11 @@ export function readList() {
 // }
 
 export function readObject(key: string) {
+  AWS.config.update({
+    accessKeyId: s3config.accessKey,
+    secretAccessKey: s3config.secretAccessKey,
+    region: s3config.region,
+  });
   myBucket.getObject(
     { Bucket: s3config.Bucket, Key: "test.png" },
     (err, data) => {

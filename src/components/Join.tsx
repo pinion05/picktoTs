@@ -38,15 +38,16 @@ const Join = () => {
 
   async function postRequest() {
     try {
-      const data = {
+      // const data = {
+      //   nickname: nickname,
+      //   email: email,
+      //   password: password,
+      // };
+      const resqonse = await axios.post("http://localhost:5000/api/register", {
         nickname: nickname,
         email: email,
         password: password,
-      };
-      const resqonse = await axios.post(
-        "http://localhost:5000/api/register",
-        data
-      );
+      });
       console.log(resqonse.data);
       alert("자동으로 로그인됩니다");
       login();

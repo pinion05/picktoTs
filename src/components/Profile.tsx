@@ -4,14 +4,17 @@ import img3 from "../img/cash-macanaya-u24e_r6BsRE-unsplash.jpg";
 import img4 from "../img/david-emrich-X1Hozg__MiA-unsplash.jpg";
 import { useNavigate } from "react-router-dom";
 import { useStore } from "../store";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { styled } from "styled-components";
 import profileImg from "../img/facebookProfile.png";
 import ArrayContainer from "./ArrayContainer";
 import { Wrap } from "../styledComponent";
 import { Button } from "@mui/material";
+
 const Profile: React.FC = () => {
   const { loginConditon, logout, login, setUserName, userName } = useStore();
+
+  const navigate = useNavigate();
 
   function clickLogout() {
     logout();
@@ -35,6 +38,10 @@ const Profile: React.FC = () => {
     img4,
     img3,
   ];
+
+  function clickUpload(e: any) {
+    navigate("/upload");
+  }
   return (
     <>
       <Container>
@@ -44,7 +51,7 @@ const Profile: React.FC = () => {
             <Wrap dir="row">
               <UserName>{`${userName}`}</UserName>
               <Button>프로필 수정</Button>
-              <Button>업로드</Button>
+              <Button onClick={(e) => clickUpload(e)}>업로드</Button>
               <Button onClick={() => clickLogout()}>로그아웃</Button>
             </Wrap>
             <Wrap dir="row">{/* <UserName>{`username`}</UserName> */}</Wrap>

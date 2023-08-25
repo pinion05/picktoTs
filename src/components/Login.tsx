@@ -50,6 +50,8 @@ const Login: React.FC = () => {
           console.log("유저정보 일치");
           sessionStorage.clear();
           sessionStorage.setItem("userName", userInfo.nickname);
+          sessionStorage.setItem("userID", userInfo.id);
+          sessionStorage.setItem("userEmail", userInfo.email);
         } else {
           alert("이메일 형식이 맞지 않습니다.");
         }
