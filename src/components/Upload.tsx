@@ -1,9 +1,11 @@
-import React, { FormEvent, useRef, useState } from "react";
+import React, { FormEvent, useEffect, useRef, useState } from "react";
 import { styled } from "styled-components";
 import { onFileUpload, readObject } from "../awsS3";
 import { Button } from "@mui/material";
 import s3config from "../s3config.json";
 import axios from "axios";
+import { Wrap } from "../styledComponent";
+import { FlowFlags } from "typescript";
 
 const Upload: React.FC = () => {
   const [newImg, setNewImg] = useState<string>("");
@@ -14,16 +16,17 @@ const Upload: React.FC = () => {
   async function submitForm(e: FormEvent) {
     e.preventDefault();
 
-    //*이미지가 선택되었나 확인
     if (imgRef.current !== null && imgRef.current.files) {
       try {
         const response = await axios.post("http://localhost:5000/api/post", {
           uploaderID: sessionStorage.getItem("userID"),
+          uploadImgName: newFileName,
         });
         console.log(response.data.id);
         setPostID(response.data.id);
       } catch (err) {
         console.error(err);
+        alert("에러발생");
       }
 
       const oldFile = imgRef.current.files[0];
@@ -34,13 +37,13 @@ const Upload: React.FC = () => {
       switch (fileExtension) {
         //
         case "jpg":
-          newFile = new File([oldFile], `${postID + 1}.jpg`, {
+          newFile = new File([oldFile], `${newFileName}.jpg`, {
             type: oldFile.type,
           });
           break;
 
         case "png":
-          newFile = new File([oldFile], `${postID + 1}.png`, {
+          newFile = new File([oldFile], `${newFileName}.png`, {
             type: oldFile.type,
           });
           break;
@@ -61,30 +64,40 @@ const Upload: React.FC = () => {
 
   function changePostName(e: React.ChangeEvent<HTMLInputElement>) {
     setNewFileName(e.target.value);
+    console.log(newFileName);
   }
 
   function clickSerch() {
     readObject("test.png");
   }
 
+  function changeImg(e: React.ChangeEvent<HTMLInputElement>) {
+    console.log("이미지 변환됨");
+  }
+
   return (
     <>
-      <form onSubmit={(e) => submitForm(e)}>
+      <Form onSubmit={(e) => submitForm(e)}>
         <img width={"100px"} src={newImg} alt="" />
-        <ImgUpload ref={imgRef} type="file" />
+        <ImgUpload ref={imgRef} type="file" onChange={(e) => changeImg(e)} />
+        <input
+          value={newFileName}
+          type="text"
+          onChange={(e) => changePostName(e)}
+        />
         <Button type="submit">업로드</Button>
-      </form>
-      <button onClick={() => clickSerch()} />
-      <PreviewIMg
-        src={`https://${s3config.Bucket}.s3.${
-          s3config.region
-        }.amazonaws.com/${"test.png"}`}
-        alt=""
-      />
+      </Form>
+      {/* <button onClick={() => clicktest()} /> */}
     </>
   );
 };
 export default Upload;
+
+const Form = styled.form`
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+`;
 
 const ImgUpload = styled.input`
   width: 200px;
