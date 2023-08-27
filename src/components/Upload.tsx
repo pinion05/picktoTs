@@ -12,45 +12,47 @@ const Upload: React.FC = () => {
   const [newImg, setNewImg] = useState<string>("");
   const [newFileName, setNewFileName] = useState<string>("");
   const [postID, setPostID] = useState<string>("");
+  const [fileExtension, setFileExtension] = useState<string>("");
 
   async function submitForm(e: FormEvent) {
     e.preventDefault();
 
     if (imgRef.current !== null && imgRef.current.files) {
       const oldFile = imgRef.current.files[0];
-      const fileExtension = oldFile.name.split(".")[1];
-
-      let newFile: File | null = null;
+      setNewImg(URL.createObjectURL(oldFile));
+      setFileExtension(oldFile.name.split(".")[1]);
       const uniqueImageId = uuidv4();
+      const newFile = new File(
+        //*파일의 메타데이터
+        [oldFile],
+        //*파일의 이름
+        `${uniqueImageId}.${oldFile.name.split(".")[1]}`,
+        {
+          type: oldFile.type,
+        }
+      );
 
-      switch (fileExtension) {
-        //
-        case "jpg":
-          newFile = new File([oldFile], `${uniqueImageId}.jpg`, {
-            type: oldFile.type,
-          });
-          break;
-
-        case "png":
-          newFile = new File([oldFile], `${uniqueImageId}.png`, {
-            type: oldFile.type,
-          });
-          break;
-
-        default:
-          alert("지원하지 않는 파일 형식입니다.");
-          break;
-      }
-      if (newFile) {
+      try {
         onFileUpload(newFile); //! 파일업로드 함수
-        console.log("업로드한 객체의 이름 : " + newFile?.name);
-        setNewImg(URL.createObjectURL(newFile));
+        console.log("s3에 업로드동작됨");
+      } catch (err) {
+        console.log("에러발생 함수중지");
+        console.error(err);
+        return;
       }
+
+      console.log(
+        `업로드한 객체의 이름 :  ${newFile?.name} 파일형식 = ${
+          oldFile.name.split(".")[1]
+        }`
+      );
+
       try {
         const response = await axios.post("http://localhost:5000/api/post", {
           uploaderID: sessionStorage.getItem("userID"),
           postID: uniqueImageId,
           postName: newFileName,
+          imgExtension: oldFile.name.split(".")[1],
         });
         console.log(response.data.id);
         setPostID(response.data.id);
@@ -64,7 +66,6 @@ const Upload: React.FC = () => {
 
   function changePostName(e: React.ChangeEvent<HTMLInputElement>) {
     setNewFileName(e.target.value);
-    console.log(newFileName);
   }
 
   function clickSerch() {

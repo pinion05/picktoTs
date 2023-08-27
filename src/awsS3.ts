@@ -12,7 +12,7 @@ export async function onFileUpload(file: File) {
   AWS.config.update({
     accessKeyId: s3config.accessKey,
     secretAccessKey: s3config.secretAccessKey,
-    region: s3config.region,
+    // region: s3config.region,
   });
   myBucket
     .putObject({

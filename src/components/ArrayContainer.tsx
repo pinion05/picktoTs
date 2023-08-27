@@ -7,31 +7,31 @@ import { styled } from "styled-components";
 
 interface ArrayContainerProps {
   column: number;
-  imgArray: string[];
+  imgArray: Array<PostData> | undefined;
 }
 const ArrayContainer: React.FC<ArrayContainerProps> = ({
   column,
   imgArray,
 }) => {
   //
-  function shuffle(array: Array<any>) {
-    return array.sort(() => Math.random() - 0.5);
-  }
+
   // const imgArray = [img1, img2, img3, img4];
 
-  function lngthTimeImgArray(a: number): Array<any> {
-    let beforMixImgArray: any = [];
-    for (let i = 0; i < a; i++) {
-      beforMixImgArray = beforMixImgArray.concat(imgArray);
+  function asdf() {
+    if (imgArray === undefined) return [];
+    let result = [];
+    for (let i = 0; i < imgArray.length; i++) {
+      result.push(
+        `https://testbucket12342563.s3.ap-northeast-2.amazonaws.com/${imgArray[i].id}.png`
+      );
     }
-    return shuffle(beforMixImgArray);
+    return result;
   }
-
   const array1: string[] = [];
   const array2: string[] = [];
   const array3: string[] = [];
 
-  lngthTimeImgArray(1).forEach((image, index) => {
+  asdf().forEach((image, index) => {
     if (index % 3 === 0) {
       array3.push(image);
     } else if (index % 3 === 1) {

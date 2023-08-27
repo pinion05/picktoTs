@@ -24,20 +24,6 @@ const Profile: React.FC = () => {
   useEffect(() => {
     setUserName(sessionStorage.userName);
   }, []);
-  // const navigate = useNavigate();
-  // const { loginde, login, logout } = useStore();
-  const array1: string[] = [
-    img1,
-    img2,
-    img4,
-    img3,
-    img2,
-    img4,
-    img3,
-    img2,
-    img4,
-    img3,
-  ];
 
   function clickUpload(e: any) {
     navigate("/upload");
@@ -58,7 +44,7 @@ const Profile: React.FC = () => {
             <Wrap dir="row">{/* <UserName>{`username`}</UserName> */}</Wrap>
           </Wrap>
         </Head>
-        <ArrayContainer column={3} imgArray={array1} />
+        {/* <ArrayContainer column={3} imgArray={array1} /> */}
       </Container>
     </>
   );
