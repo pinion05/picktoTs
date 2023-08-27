@@ -6,44 +6,33 @@ import s3config from "../s3config.json";
 import axios from "axios";
 import { Wrap } from "../styledComponent";
 import { FlowFlags } from "typescript";
+import { v4 as uuidv4 } from "uuid";
 
 const Upload: React.FC = () => {
   const [newImg, setNewImg] = useState<string>("");
   const [newFileName, setNewFileName] = useState<string>("");
   const [postID, setPostID] = useState<string>("");
-  //
 
   async function submitForm(e: FormEvent) {
     e.preventDefault();
 
     if (imgRef.current !== null && imgRef.current.files) {
-      try {
-        const response = await axios.post("http://localhost:5000/api/post", {
-          uploaderID: sessionStorage.getItem("userID"),
-          uploadImgName: newFileName,
-        });
-        console.log(response.data.id);
-        setPostID(response.data.id);
-      } catch (err) {
-        console.error(err);
-        alert("에러발생");
-      }
-
       const oldFile = imgRef.current.files[0];
       const fileExtension = oldFile.name.split(".")[1];
 
       let newFile: File | null = null;
+      const uniqueImageId = uuidv4();
 
       switch (fileExtension) {
         //
         case "jpg":
-          newFile = new File([oldFile], `${newFileName}.jpg`, {
+          newFile = new File([oldFile], `${uniqueImageId}.jpg`, {
             type: oldFile.type,
           });
           break;
 
         case "png":
-          newFile = new File([oldFile], `${newFileName}.png`, {
+          newFile = new File([oldFile], `${uniqueImageId}.png`, {
             type: oldFile.type,
           });
           break;
@@ -53,10 +42,21 @@ const Upload: React.FC = () => {
           break;
       }
       if (newFile) {
-        console.log(newFile?.name);
-        console.log(`${URL.createObjectURL(newFile)}`);
-        setNewImg(URL.createObjectURL(newFile));
         onFileUpload(newFile); //! 파일업로드 함수
+        console.log("업로드한 객체의 이름 : " + newFile?.name);
+        setNewImg(URL.createObjectURL(newFile));
+      }
+      try {
+        const response = await axios.post("http://localhost:5000/api/post", {
+          uploaderID: sessionStorage.getItem("userID"),
+          postID: uniqueImageId,
+          postName: newFileName,
+        });
+        console.log(response.data.id);
+        setPostID(response.data.id);
+      } catch (err) {
+        console.error(err);
+        alert("에러발생");
       }
     }
   }

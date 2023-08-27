@@ -22,10 +22,10 @@ export async function onFileUpload(file: File) {
       Key: file.name,
     })
     .on("httpUploadProgress", (evt) => {
-      alert("SUCCESS");
+      alert("파일 업로드됨");
     })
     .send((err) => {
-      if (err) console.log(err);
+      if (err) console.error(err);
     });
 }
 
