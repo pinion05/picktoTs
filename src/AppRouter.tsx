@@ -28,7 +28,6 @@ const AppRouther = () => {
               />
             }
           />
-          <Route path="/gallery" element={<Gallery />} />
           <Route path="/chat" element={<Chat />} />
           {/* <Route path="/join" element={}></Route> */}
           <Route path="/join" element={<Join />} />

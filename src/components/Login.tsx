@@ -45,6 +45,8 @@ const Login: React.FC = () => {
     try {
       // console.log("enter try");
       const userInfo = await emailPasswordRequset();
+      console.log(userInfo);
+
       // console.log(userInfo);
       if (userInfo.password === password) {
         // console.log("비밀번호 일치");
@@ -77,6 +79,8 @@ const Login: React.FC = () => {
         email: email,
         password: password,
       });
+      console.log(response);
+
       if (response.status === 200) {
         // console.log("유저 정보:", response.data[0]);
         return response.data[0];

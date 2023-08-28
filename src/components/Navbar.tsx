@@ -46,7 +46,6 @@ const Navbar: React.FC = () => {
 
   const NavIconsArray = [
     retrunIcon(`upload`, Upload),
-    retrunIcon(`gallery`, Pick),
     retrunIcon(`home`, Home),
     retrunIcon(`chat`, Chat),
     retrunIcon(`profile`, User),

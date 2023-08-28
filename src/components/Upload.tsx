@@ -9,6 +9,8 @@ import { FlowFlags } from "typescript";
 import { v4 as uuidv4 } from "uuid";
 
 const Upload: React.FC = () => {
+  const imgRef = useRef<HTMLInputElement>(null);
+
   const [newImg, setNewImg] = useState<string>("");
   const [newFileName, setNewFileName] = useState<string>("");
   const [postID, setPostID] = useState<string>("");
@@ -33,7 +35,7 @@ const Upload: React.FC = () => {
       );
 
       try {
-        onFileUpload(newFile); //! 파일업로드 함수
+        await onFileUpload(newFile); //! 파일업로드 함수
         console.log("s3에 업로드동작됨");
       } catch (err) {
         console.log("에러발생 함수중지");
@@ -62,7 +64,6 @@ const Upload: React.FC = () => {
       }
     }
   }
-  const imgRef = useRef<HTMLInputElement>(null);
 
   function changePostName(e: React.ChangeEvent<HTMLInputElement>) {
     setNewFileName(e.target.value);

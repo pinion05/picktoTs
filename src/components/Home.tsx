@@ -2,36 +2,68 @@ import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import ArrayContainer from "./ArrayContainer";
 import axios from "axios";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { PostData } from "../model/interfacePostData";
 
 const Home: React.FC = () => {
-  const img1 =
-    "https://testbucket12342563.s3.ap-northeast-2.amazonaws.com/0e39e762-ac1a-4f2f-84ee-0dc0a4e5788f.png";
-
-  const img2 =
-    "https://testbucket12342563.s3.ap-northeast-2.amazonaws.com/2f221cd0-2f02-4c66-bf59-1457cb6494e1.png";
-
-  const img3 =
-    "https://testbucket12342563.s3.ap-northeast-2.amazonaws.com/2f221cd0-2f02-4c66-bf59-1457cb6494e1.png";
-
-  const img4 =
-    "https://testbucket12342563.s3.ap-northeast-2.amazonaws.com/2f221cd0-2f02-4c66-bf59-1457cb6494e1.png";
-
-  const imgArray = [img1, img2, img3, img4];
-
-  const [sqlPostRowArray, setSqlPostRowArray] = useState();
-
   useEffect(() => {
+    console.log("home마운트됨");
     sqlPotsRead();
   }, []);
 
+  const [sqlPostRowArray, setSqlPostRowArray] = useState();
+  const [startDate, setStartDate] = useState<Date | null>(new Date());
+  const [endDate, setEndDate] = useState<Date | null>(new Date());
   async function sqlPotsRead() {
-    const list = await axios.get("http://localhost:5000/api/post");
-    console.log(list.data);
-    setSqlPostRowArray(list.data);
-  }
+    try {
+      console.log("try진입");
 
+      const list = await axios.get("http://localhost:5000/api/post");
+      console.log("next axios");
+      console.log("sql 게시글데이터");
+
+      // list.data.forEach((element: PostData) => {
+      //   console.log(element);
+      // });
+
+      const filterList = list.data.filter((post: PostData) => {
+        if (startDate && endDate) {
+          if (
+            new Date(post.date).getDate() >= startDate.getDate() &&
+            new Date(post.date).getDate() <= endDate.getDate()
+          )
+            return true;
+        }
+      });
+
+      console.log(filterList);
+      console.log(list.data);
+
+      setSqlPostRowArray(filterList);
+    } catch (error) {
+      console.log(error);
+    }
+  }
   return (
     <>
+      <DatePicker
+        dateFormat="yyyy-MM-dd"
+        selected={startDate}
+        onChange={(date) => setStartDate(date)}
+        selectsStart
+        startDate={startDate}
+        endDate={endDate}
+      />
+      <DatePicker
+        dateFormat="yyyy-MM-dd"
+        selected={endDate}
+        onChange={(date) => setEndDate(date)}
+        selectsEnd
+        startDate={startDate}
+        endDate={endDate}
+        minDate={startDate}
+      />
       <WebTitle>PICKTO</WebTitle>
       <ArrayContainer column={3} imgArray={sqlPostRowArray} />
     </>
