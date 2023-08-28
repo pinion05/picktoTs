@@ -8,26 +8,34 @@ import { PostData } from "../model/interfacePostData";
 
 const Home: React.FC = () => {
   useEffect(() => {
-    console.log("home마운트됨");
     sqlPotsRead();
   }, []);
 
-  const [sqlPostRowArray, setSqlPostRowArray] = useState();
   const [startDate, setStartDate] = useState<Date | null>(new Date());
   const [endDate, setEndDate] = useState<Date | null>(new Date());
+  const [readSQL, setReadSQL] = useState<any>();
+  const [renderPosts, setRenderPosts] = useState();
+
   async function sqlPotsRead() {
     try {
-      console.log("try진입");
+      const allPosts = await axios.get("http://localhost:5000/api/post");
+      console.log(allPosts.data);
 
-      const list = await axios.get("http://localhost:5000/api/post");
-      console.log("next axios");
-      console.log("sql 게시글데이터");
+      //
+      setReadSQL(allPosts.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
-      // list.data.forEach((element: PostData) => {
-      //   console.log(element);
-      // });
+  useEffect(() => {
+    console.log("날자변경됨");
+    changeDate();
+  }, [startDate, endDate]);
 
-      const filterList = list.data.filter((post: PostData) => {
+  async function changeDate() {
+    if (readSQL) {
+      const filterdarray = await readSQL.filter((post: PostData) => {
         if (startDate && endDate) {
           if (
             new Date(post.date).getDate() >= startDate.getDate() &&
@@ -36,21 +44,18 @@ const Home: React.FC = () => {
             return true;
         }
       });
-
-      console.log(filterList);
-      console.log(list.data);
-
-      setSqlPostRowArray(filterList);
-    } catch (error) {
-      console.log(error);
+      setRenderPosts(filterdarray);
     }
   }
+
   return (
     <>
       <DatePicker
         dateFormat="yyyy-MM-dd"
         selected={startDate}
-        onChange={(date) => setStartDate(date)}
+        onChange={(date) => {
+          setStartDate(date);
+        }}
         selectsStart
         startDate={startDate}
         endDate={endDate}
@@ -58,14 +63,16 @@ const Home: React.FC = () => {
       <DatePicker
         dateFormat="yyyy-MM-dd"
         selected={endDate}
-        onChange={(date) => setEndDate(date)}
+        onChange={(date) => {
+          setEndDate(date);
+        }}
         selectsEnd
         startDate={startDate}
         endDate={endDate}
         minDate={startDate}
       />
       <WebTitle>PICKTO</WebTitle>
-      <ArrayContainer column={3} imgArray={sqlPostRowArray} />
+      <ArrayContainer column={3} imgArray={renderPosts} />
     </>
   );
 };
