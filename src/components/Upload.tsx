@@ -19,7 +19,7 @@ const Upload: React.FC = () => {
   async function submitForm(e: FormEvent) {
     e.preventDefault();
 
-    if (imgRef.current !== null && imgRef.current.files) {
+    if (imgRef.current && imgRef.current.files) {
       const oldFile = imgRef.current.files[0];
       setNewImg(URL.createObjectURL(oldFile));
       setFileExtension(oldFile.name.split(".")[1]);
@@ -38,6 +38,7 @@ const Upload: React.FC = () => {
         await onFileUpload(newFile); //! 파일업로드 함수
         console.log("s3에 업로드동작됨");
       } catch (err) {
+        alert("업로드 에러발생");
         console.log("에러발생 함수중지");
         console.error(err);
         return;

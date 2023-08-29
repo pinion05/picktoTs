@@ -5,24 +5,32 @@ import axios from "axios";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { PostData } from "../model/interfacePostData";
+import { Spacing, Wrap } from "../styledComponent";
 
 const Home: React.FC = () => {
-  useEffect(() => {
-    sqlPotsRead();
-  }, []);
-
-  const [startDate, setStartDate] = useState<Date | null>(new Date());
-  const [endDate, setEndDate] = useState<Date | null>(new Date());
-  const [readSQL, setReadSQL] = useState<any>();
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
+  const [allPost, setAllPost] = useState<any>();
   const [renderPosts, setRenderPosts] = useState();
 
-  async function sqlPotsRead() {
+  useEffect(() => {
+    getAllPost();
+  }, []);
+
+  useEffect(() => {
+    setStartDate(new Date());
+    setEndDate(new Date());
+  }, [allPost]);
+
+  //* allPost state애 값을 저장
+  async function getAllPost() {
     try {
       const allPosts = await axios.get("http://localhost:5000/api/post");
+      console.log("state에 저장되는 값--------------");
       console.log(allPosts.data);
+      console.log("state에 저장되는 값--------------");
 
-      //
-      setReadSQL(allPosts.data);
+      setAllPost(allPosts.data);
     } catch (error) {
       console.log(error);
     }
@@ -34,8 +42,8 @@ const Home: React.FC = () => {
   }, [startDate, endDate]);
 
   async function changeDate() {
-    if (readSQL) {
-      const filterdarray = await readSQL.filter((post: PostData) => {
+    if (allPost) {
+      const filterdarray = await allPost.filter((post: PostData) => {
         if (startDate && endDate) {
           if (
             new Date(post.date).getDate() >= startDate.getDate() &&
@@ -50,27 +58,32 @@ const Home: React.FC = () => {
 
   return (
     <>
-      <DatePicker
-        dateFormat="yyyy-MM-dd"
-        selected={startDate}
-        onChange={(date) => {
-          setStartDate(date);
-        }}
-        selectsStart
-        startDate={startDate}
-        endDate={endDate}
-      />
-      <DatePicker
-        dateFormat="yyyy-MM-dd"
-        selected={endDate}
-        onChange={(date) => {
-          setEndDate(date);
-        }}
-        selectsEnd
-        startDate={startDate}
-        endDate={endDate}
-        minDate={startDate}
-      />
+      <Wrap dir="row">
+        <DatePicker
+          dateFormat="yyyy-MM-dd"
+          selected={startDate}
+          onChange={(date) => {
+            setStartDate(date);
+          }}
+          selectsStart
+          startDate={startDate}
+          endDate={endDate}
+        />
+        <Spacing width="20px" />
+        <span>~~</span>
+        <Spacing width="20px" />
+        <DatePicker
+          dateFormat="yyyy-MM-dd"
+          selected={endDate}
+          onChange={(date) => {
+            setEndDate(date);
+          }}
+          selectsEnd
+          startDate={startDate}
+          endDate={endDate}
+          minDate={startDate}
+        />
+      </Wrap>
       <WebTitle>PICKTO</WebTitle>
       <ArrayContainer column={3} imgArray={renderPosts} />
     </>
