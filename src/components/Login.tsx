@@ -68,6 +68,7 @@ const Login: React.FC = () => {
       if (email === "") {
         alert("이메일을 입력해주세요");
       } else {
+        alert("로그인실패함");
         console.log("로그인 실패함");
       }
     }

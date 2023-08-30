@@ -2,6 +2,8 @@
 /src/fbase.ts
 # /src/awsS3.ts  이젠 노출되도 됨
 /src/s3config.json
+.env
+
 # dependencies
 /node_modules
 /.pnp

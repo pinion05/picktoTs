@@ -28,6 +28,7 @@ const ArrayContainer: React.FC<ArrayContainerProps> = ({
     }
     return result;
   }
+
   const array1: string[] = [];
   const array2: string[] = [];
   const array3: string[] = [];

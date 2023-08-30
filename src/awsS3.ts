@@ -2,17 +2,17 @@ import AWS from "aws-sdk";
 import s3config from "./s3config.json";
 
 const myBucket = new AWS.S3({
-  params: { Bucket: s3config.Bucket },
-  region: s3config.region,
+  params: { Bucket: process.env.REACT_APP_BUCKET },
+  region: process.env.REACT_APP_REGION,
 });
 
 // AWS ACCESS KEY를 세팅합니다.
 
 export async function onFileUpload(file: File) {
   AWS.config.update({
-    accessKeyId: s3config.accessKey,
-    secretAccessKey: s3config.secretAccessKey,
-    // region: s3config.region,
+    accessKeyId: process.env.REACT_APP_ACCESSKEY,
+    secretAccessKey: process.env.REACT_APP_SECRETACCESSKEY,
+    region: process.env.REACT_APP_REGION,
   });
   myBucket
     .putObject({
@@ -47,9 +47,9 @@ export async function onFileUpload(file: File) {
 
 export function readList() {
   AWS.config.update({
-    accessKeyId: s3config.accessKey,
-    secretAccessKey: s3config.secretAccessKey,
-    region: s3config.region,
+    accessKeyId: process.env.REACT_APP_ACCESSKEY,
+    secretAccessKey: process.env.REACT_APP_SECRETACCESSKEY,
+    region: process.env.REACT_APP_REGION,
   });
   myBucket.listObjects({ Bucket: s3config.Bucket }, (err, data) => {
     console.log(data);
@@ -70,9 +70,9 @@ export function readList() {
 
 export function readObject(key: string) {
   AWS.config.update({
-    accessKeyId: s3config.accessKey,
-    secretAccessKey: s3config.secretAccessKey,
-    region: s3config.region,
+    accessKeyId: process.env.REACT_APP_ACCESSKEY,
+    secretAccessKey: process.env.REACT_APP_SECRETACCESSKEY,
+    region: process.env.REACT_APP_REGION,
   });
   myBucket.getObject(
     { Bucket: s3config.Bucket, Key: "test.png" },

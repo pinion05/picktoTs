@@ -22,6 +22,11 @@ const Home: React.FC = () => {
     setEndDate(new Date());
   }, [allPost]);
 
+  useEffect(() => {
+    console.log("날자변경됨");
+    changeDate();
+  }, [startDate, endDate]);
+
   //* allPost state애 값을 저장
   async function getAllPost() {
     try {
@@ -36,20 +41,13 @@ const Home: React.FC = () => {
     }
   }
 
-  useEffect(() => {
-    console.log("날자변경됨");
-    changeDate();
-  }, [startDate, endDate]);
-
   async function changeDate() {
     if (allPost) {
       const filterdarray = await allPost.filter((post: PostData) => {
+        const postDate: number = new Date(post.date).getDate();
         if (startDate && endDate) {
-          if (
-            new Date(post.date).getDate() >= startDate.getDate() &&
-            new Date(post.date).getDate() <= endDate.getDate()
-          )
-            return true;
+          // prettier-ignore
+          if (startDate.getDate() <= postDate && postDate <= endDate.getDate()) return true;
         }
       });
       setRenderPosts(filterdarray);
