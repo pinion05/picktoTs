@@ -1,27 +1,21 @@
 import React, { FormEvent, useEffect, useRef, useState } from "react";
 import { styled } from "styled-components";
-import { onFileUpload, readObject } from "../awsS3";
 import { Button } from "@mui/material";
-import s3config from "../s3config.json";
-import axios from "axios";
 import { Spacing, Wrap } from "../styledComponent";
-import { FlowFlags } from "typescript";
 import { v4 as uuidv4 } from "uuid";
-import { useDropzone } from "react-dropzone";
+import axios from "axios";
 
 const Upload: React.FC = () => {
   const imgRef = useRef<HTMLInputElement>(null);
-
+  const [currentFile, setCurrentFile] = useState<File>();
+  const [postName, setPostName] = useState<string>("");
+  const [fileExtension, setFileExtension] = useState<string>("");
   const [previewImg, setPreviewImg] = useState<string>(
     "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg"
   );
+  //
 
-  const [currentFile, setCurrentFile] = useState<File>();
-  const [postID, setPostID] = useState<string>("");
-  const [postName, setPostName] = useState<string>("");
-  const [fileExtension, setFileExtension] = useState<string>("");
-  const [newFile, setNewFile] = useState<File>();
-
+  //*인풋의 이미지가 변경될때 동시에 실행됨
   function changeImg(e: React.ChangeEvent<HTMLInputElement>) {
     console.log("이미지 변환됨");
     if (e.target.files) {
@@ -29,61 +23,82 @@ const Upload: React.FC = () => {
     }
   }
 
+  //
+
+  //* 인풋의 이미지가 변경된다음 실행됨
   useEffect(() => {
-    console.log(newFile);
     if (currentFile) {
-      setPreviewImg(URL.createObjectURL(currentFile));
       const lexicalFileExtension = currentFile.name.split(".")[1];
+      const changeImgURL = URL.createObjectURL(currentFile);
+
+      setPreviewImg(changeImgURL);
       setFileExtension(lexicalFileExtension);
-      const uniqueImageId = uuidv4();
-      setPostID(uniqueImageId);
-      const lexicalNewFile = new File(
-        //*파일의 메타데이터
-        [currentFile],
-        //*파일의 이름
-        `${uniqueImageId}.${lexicalFileExtension}`,
-        {
-          type: currentFile.type,
-        }
-      );
-      setNewFile(lexicalNewFile);
     }
   }, [currentFile]);
 
+  //
+  //* 게시글의 이름을 수정하면 동시에 실행됨
   function changePostName(e: React.ChangeEvent<HTMLInputElement>) {
     setPostName(e.target.value);
   }
 
+  //
+
+  //* 업로드 버튼을 누르면 동시에 작동됨
   async function submitForm(e: FormEvent) {
     e.preventDefault();
-    try {
-      if (newFile) {
-        await onFileUpload(newFile); //! 파일업로드 함수
-        console.log("s3에 업로드동작됨");
+
+    if (currentFile) {
+      const uniqueImageId = uuidv4();
+      const newFileName = `${uniqueImageId}.${fileExtension}`;
+      const userID = sessionStorage.getItem("userID");
+
+      if (!userID) {
+        alert("유저ID 검출할 수 없음");
+        return;
       }
-    } catch (err) {
-      alert("업로드 에러발생");
-      console.log("에러발생 함수중지");
-      console.error(err);
-      return;
-    }
-    console.log(
-      `업로드한 객체의 이름 :  ${newFile?.name} 파일형식 = ${fileExtension}`
-    );
-    try {
-      const response = await axios.post("http://localhost:5000/api/post", {
-        uploaderID: sessionStorage.getItem("userID"),
-        postID: postID,
-        postName: postName,
-        imgExtension: fileExtension,
+
+      //*                S3용 객체 생성
+      const lexicalNewFile = new File([currentFile], newFileName, {
+        type: currentFile.type,
       });
-      console.log(response.data.id);
-      setPostID(response.data.id);
-    } catch (err) {
-      console.error(err);
-      alert("에러발생");
+
+      //*                POST용 FromData 생성
+      const formData = new FormData();
+      formData.append("file", lexicalNewFile);
+      formData.append("uploaderID", userID);
+      formData.append("postID", uniqueImageId);
+      formData.append("postName", postName);
+      formData.append("imgExtension", fileExtension);
+      try {
+        const response = await axios.post(
+          "http://localhost:5000/api/post",
+          formData,
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+          }
+        );
+      } catch (err) {
+        console.error(err);
+        console.log("에러발생");
+      }
     }
   }
+
+  // if (newFile) {
+  // try {
+  //   console.log("s3에 업로드동작됨");
+  //   await onFileUpload(newFile); //!   s3 파일업로드 함수
+  // } catch (err) {
+  //   alert("업로드 에러발생");
+  //   console.log("에러발생 함수중지");
+  //   console.error(err);
+  //   return;
+  // }
+  // }
+  // console.log(
+  //   // `업로드한 객체의 이름 :  ${newFile?.name} 파일형식 = ${fileExtension}`
+  // );
 
   return (
     <>
@@ -98,8 +113,6 @@ const Upload: React.FC = () => {
         />
         <Button type="submit">업로드</Button>
       </Form>
-
-      {/* <button onClick={() => clicktest()} /> */}
     </>
   );
 };
