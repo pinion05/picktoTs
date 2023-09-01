@@ -44,12 +44,13 @@ const Home: React.FC = () => {
   async function changeDate() {
     if (allPost) {
       const filterdarray = await allPost.filter((post: PostData) => {
-        const postDate: number = new Date(post.date).getDate();
+        const postDate: Date = new Date(post.date);
         if (startDate && endDate) {
           // prettier-ignore
-          if (startDate.getDate() <= postDate && postDate <= endDate.getDate()) return true;
+          if (startDate <= postDate && postDate <= endDate) return true;
         }
       });
+      console.log(filterdarray);
       setRenderPosts(filterdarray);
     }
   }

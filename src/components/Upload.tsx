@@ -78,9 +78,11 @@ const Upload: React.FC = () => {
             headers: { "Content-Type": "multipart/form-data" },
           }
         );
+        console.log(response);
+        alert(response.data);
       } catch (err) {
         console.error(err);
-        console.log("에러발생");
+        alert("서버 에러발생");
       }
     }
   }
@@ -88,7 +90,7 @@ const Upload: React.FC = () => {
   // if (newFile) {
   // try {
   //   console.log("s3에 업로드동작됨");
-  //   await onFileUpload(newFile); //!   s3 파일업로드 함수
+  //   await onFileUpload(newFile); //!   s3 파일업로드 함수 이제는 서버에서 처리해서 필요없음
   // } catch (err) {
   //   alert("업로드 에러발생");
   //   console.log("에러발생 함수중지");
