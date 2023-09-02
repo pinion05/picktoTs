@@ -6,6 +6,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { PostData } from "../model/interfacePostData";
 import { Spacing, Wrap } from "../styledComponent";
+import moment, { months } from "moment";
 
 const Home: React.FC = () => {
   const [startDate, setStartDate] = useState<Date | null>(null);
@@ -43,14 +44,13 @@ const Home: React.FC = () => {
 
   async function changeDate() {
     if (allPost) {
+      const realStartDate = moment(startDate).startOf("day");
+      const realEndtDate = moment(endDate).endOf("day");
       const filterdarray = await allPost.filter((post: PostData) => {
-        const postDate: Date = new Date(post.date);
-        if (startDate && endDate) {
-          // prettier-ignore
-          if (startDate <= postDate && postDate <= endDate) return true;
-        }
+        const postDate = moment(post.date);
+        if (postDate.isBetween(realStartDate, realEndtDate)) return true;
       });
-      console.log(filterdarray);
+
       setRenderPosts(filterdarray);
     }
   }
@@ -84,7 +84,7 @@ const Home: React.FC = () => {
         />
       </Wrap>
       <WebTitle>PICKTO</WebTitle>
-      <ArrayContainer column={3} imgArray={renderPosts} />
+      <ArrayContainer column={3} postDataArray={renderPosts} />
     </>
   );
 };

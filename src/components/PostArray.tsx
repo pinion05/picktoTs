@@ -1,15 +1,23 @@
 import React from "react";
 import Post from "./Post";
 import { styled } from "styled-components";
+import { Spacing } from "../styledComponent";
+import { PostData } from "../model/interfacePostData";
 
-const PostArray = ({ data }: { data: string[] }) => {
-  // const array: any[] = props.data;
+interface ArrayContainerProps {
+  postDataArray: Array<PostData> | undefined;
+}
+
+const PostArray: React.FC<ArrayContainerProps> = ({ postDataArray }) => {
   return (
     <>
+      <Spacing width="20px" />
       <Contianer>
-        {data.map((img: string) => (
-          <Post data={img} />
-        ))}
+        {postDataArray
+          ? postDataArray.map((postData: PostData) => (
+              <Post postData={postData} />
+            ))
+          : null}
       </Contianer>
     </>
   );

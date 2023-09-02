@@ -11,6 +11,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 import DatePicker from "react-datepicker";
 import { PostData } from "../model/interfacePostData";
+import moment from "moment";
 
 const Profile: React.FC = () => {
   const { loginConditon, logout, login, setUserName, userName } = useStore();
@@ -35,7 +36,7 @@ const Profile: React.FC = () => {
 
   useEffect(() => {
     console.log();
-    filterPosts();
+    changeDate();
   }, [startDate, endDate]);
 
   //* 로그인상태 state를 false로 수정
@@ -57,30 +58,22 @@ const Profile: React.FC = () => {
     }
   }
 
-  async function filterPosts() {
+  async function changeDate() {
     if (allPost) {
-      const filterdarray = await allPost.filter((post: PostData) =>
-        filterOption(post)
-      );
+      const realStartDate = moment(startDate).startOf("day");
+      const realEndtDate = moment(endDate).endOf("day");
+      const filterdarray = await allPost.filter((post: PostData) => {
+        const postUploaderId: number = post.uploader_id;
+
+        const postDate = moment(post.date);
+        if (postDate.isBetween(realStartDate, realEndtDate)) {
+          if (sessionUserId && postUploaderId === parseInt(sessionUserId)) {
+            return true;
+          }
+        }
+      });
       setRenderPosts(filterdarray);
     }
-  }
-
-  //!   해당함수는 filter의 조건식으로 사용됨 (ele 를 받아 해당 ele의 값이 조건에 부합한지 boolean값으로 리턴한다)
-  //?   만약 startDate와 endDate의 값이 없다면 작동하지 않는다
-  //*   파라미터로 받은 PostData에서 날자를 추출해서 postDate 변수에 저장한다
-  //*   startDate 값보다 크고 EndDate보다 업로드된날의 값이 작으면 true를 반환한다
-  function filterOption(post: PostData): boolean {
-    if (startDate && endDate) {
-      const postDate: number = new Date(post.date).getDate();
-      const postUploaderId: number = post.uploader_id;
-      if (startDate.getDate() <= postDate && postDate <= endDate.getDate()) {
-        if (sessionUserId && postUploaderId === parseInt(sessionUserId)) {
-          return true;
-        }
-      }
-    } else console.log("날짜를 선택해주세요.");
-    return false;
   }
 
   function clickUpload(e: any) {
@@ -88,19 +81,21 @@ const Profile: React.FC = () => {
   }
   return (
     <>
+      <Spacing height="100px" />
       <Container>
         <Head>
-          <ProfileImg imgsrc={profileImg} />
-          <Wrap dir="clumn" style={{ justifyContent: "space-around" }}>
+          <Wrap dir="clumn">
+            <span>{`${userName}`}</span>
+            <Spacing height="50px" />
             <Wrap dir="row">
-              <UserName>{`${userName}`}</UserName>
-              <Button>프로필 수정</Button>
-              <Button onClick={(e) => clickUpload(e)}>업로드</Button>
-              <Button onClick={() => clickLogout()}>로그아웃</Button>
+              {/* <ProfileImg imgsrc={profileImg} /> */}
+              {/* <Button>프로필 수정</Button> */}
+              {/* <Button onClick={(e) => clickUpload(e)}>업로드</Button> */}
+              {/* <Button onClick={() => clickLogout()}>로그아웃</Button> */}
             </Wrap>
           </Wrap>
         </Head>
-        <Wrap dir="row">
+        <Wrap style={{ alignItems: "center" }} dir="row">
           <DatePicker
             dateFormat="yyyy-MM-dd"
             selected={startDate}
@@ -112,7 +107,7 @@ const Profile: React.FC = () => {
             endDate={endDate}
           />
           <Spacing width="20px" />
-          <span>~~</span>
+          <span style={{ fontSize: "100px" }}>~</span>
           <Spacing width="20px" />
           <DatePicker
             dateFormat="yyyy-MM-dd"
@@ -126,7 +121,8 @@ const Profile: React.FC = () => {
             minDate={startDate}
           />
         </Wrap>
-        <ArrayContainer column={3} imgArray={renderPosts} />
+        <Spacing height="50px" />
+        <ArrayContainer column={3} postDataArray={renderPosts} />
       </Container>
     </>
   );
@@ -137,21 +133,19 @@ export default Profile;
 const Container = styled.div`
   width: auto;
   height: auto;
-  margin-top: 50px;
   border-radius: 20px;
   flex-flow: column;
   align-items: center;
   justify-content: center;
   /* outline: black 1px solid; */
-  /* box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3); */
-  /* outline: 1px solid black; */
 `;
 
 const Head = styled.div`
-  width: 500px;
-  height: 100px;
-  align-items: center;
+  width: auto;
+  height: auto;
   display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 20px 20px 0px 0px;
   /* outline: 1px solid black; */
 `;
@@ -172,8 +166,7 @@ const ProfileImg = styled.div<{ imgsrc: string }>`
   /* background-image: url(${(props) => props.imgsrc}); */
 `;
 
-const UserName = styled.p`
-  margin: 0;
-  margin-right: 10px;
+const UserName = styled.span`
+  margin: 0px;
 `;
 // 무노흐 ㅣ성
