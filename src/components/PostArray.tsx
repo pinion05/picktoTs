@@ -11,11 +11,13 @@ interface ArrayContainerProps {
 const PostArray: React.FC<ArrayContainerProps> = ({ postDataArray }) => {
   return (
     <>
-      <Spacing width="20px" />
       <Contianer>
         {postDataArray
           ? postDataArray.map((postData: PostData) => (
-              <Post postData={postData} />
+              <>
+                <Post postData={postData} />
+                <Spacing height="15px" />
+              </>
             ))
           : null}
       </Contianer>

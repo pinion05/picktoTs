@@ -57,6 +57,7 @@ const Home: React.FC = () => {
 
   return (
     <>
+      <Spacing height="10px" />
       <Wrap dir="row">
         <DatePicker
           dateFormat="yyyy-MM-dd"
@@ -83,8 +84,10 @@ const Home: React.FC = () => {
           minDate={startDate}
         />
       </Wrap>
+      <Spacing height="25px" />
+
       <WebTitle>PICKTO</WebTitle>
-      <ArrayContainer column={3} postDataArray={renderPosts} />
+      <ArrayContainer postDataArray={renderPosts} />
     </>
   );
 };

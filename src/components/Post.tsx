@@ -1,22 +1,82 @@
 import { styled } from "styled-components";
-import { Spacing } from "../styledComponent";
+import { Spacing, Wrap } from "../styledComponent";
 import { ReactComponent as VoteChaeck } from "../svg/vote-true.svg";
 import { ReactComponent as VoteFalse } from "../svg/vote-false.svg";
 import { PostData } from "../model/interfacePostData";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 interface postData {
   postData: PostData;
 }
 const Post: React.FC<postData> = ({ postData }) => {
+  const userID = sessionStorage.getItem("userID");
+
+  const [isCheckVote, setIsCheckVote] = useState<boolean>();
   const renderImgURL = `https://testbucket12342563.s3.ap-northeast-2.amazonaws.com/${postData.id}.${postData.img_extension}`;
+
+  function voteClick() {
+    if (userID) {
+      console.log(`ID = ${postData.id}투표 온클릭`);
+      voteAdd();
+    }
+  }
+
+  async function voteAdd() {
+    const postID = postData.id;
+    try {
+      const response = await axios.post(`http://localhost:5000/api/vote`, {
+        postID: postID,
+        userID: userID,
+      });
+      checkVote(); // 투표가 성공적으로 추가된 후에 checkVote 함수 호출하여 최신 데이터로 상태 업데이트
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  useEffect(() => {
+    checkVote();
+  }, []);
+
+  async function checkVote() {
+    const postID = postData.id;
+    // const userID = sessionStorage.getItem(`userID`);
+    console.log(`axios 호출하는 매게변수${postID} +  ${userID}`);
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/api/vote?postID=${postID}&userID=${userID}`
+      );
+      console.log(response.data);
+      if (response.data.length > 0) {
+        console.log(postData.id + `투표됨`);
+        setIsCheckVote(true);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   return (
     <Container>
-      <img src={renderImgURL} alt="" />
+      <Img src={renderImgURL} alt="" />
       <Formet>
-        <VoteChaeck style={{ fill: "green", height: "25px", width: "25px" }} />
-        <VoteFalse style={{ fill: "#bdbdbd", height: "25px", width: "25px" }} />
-        <span>{postData.post_name}</span>
+        <Wrapdiv>
+          <Spacing width="5px" />
+          <div onClick={voteClick}>
+            {isCheckVote ? (
+              <VoteChaeck
+                style={{ fill: "green", height: "25px", width: "25px" }}
+              />
+            ) : (
+              <VoteFalse
+                style={{ fill: "#bdbdbd", height: "25px", width: "25px" }}
+              />
+            )}
+          </div>
+          <Spacing width="10px" />
+          <span>{postData.post_name}</span>
+        </Wrapdiv>
       </Formet>
     </Container>
   );
@@ -26,21 +86,33 @@ export default Post;
 const Container = styled.div`
   width: 100%;
   height: auto;
-  background-color: #ffffff;
-  :hover {
-    transform: scale(1.1, 1.1);
-    transition: transform.5s;
-    box-shadow: inset 5em 1em gold;
-  }
+  box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  /* opacity: 0; */
+
+  /* :hover { */
+  /* transform: scale(1.1, 1.1); */
+  /* transition: transform.5s; */
+  /* } */
 `;
 
 const Img = styled.img`
   object-fit: contain;
   width: 400px;
+  border-radius: 10px;
 `;
 
 const Formet = styled.div`
   width: 100%;
   height: auto;
   background-color: #ececec;
+  border-radius: 5px;
+`;
+
+const Wrapdiv = styled.div`
+  align-items: center;
+  display: flex;
+  flex-flow: row nowrap;
+  /* outline: auto; */
+  /* border: 1px solid black; */
 `;

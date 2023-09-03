@@ -90,8 +90,8 @@ const Profile: React.FC = () => {
             <Wrap dir="row">
               {/* <ProfileImg imgsrc={profileImg} /> */}
               {/* <Button>프로필 수정</Button> */}
-              {/* <Button onClick={(e) => clickUpload(e)}>업로드</Button> */}
-              {/* <Button onClick={() => clickLogout()}>로그아웃</Button> */}
+              <Button onClick={(e) => clickUpload(e)}>업로드</Button>
+              <Button onClick={() => clickLogout()}>로그아웃</Button>
             </Wrap>
           </Wrap>
         </Head>
@@ -122,7 +122,7 @@ const Profile: React.FC = () => {
           />
         </Wrap>
         <Spacing height="50px" />
-        <ArrayContainer column={3} postDataArray={renderPosts} />
+        <ArrayContainer postDataArray={renderPosts} />
       </Container>
     </>
   );

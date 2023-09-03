@@ -1,19 +1,23 @@
 import { styled } from "styled-components";
 import { PostData } from "../model/interfacePostData";
 import PostArray from "./PostArray";
+import { Spacing } from "../styledComponent";
 
 interface ArrayContainerProps {
-  column: number;
   postDataArray: Array<PostData> | undefined;
 }
 
-const ArrayContainer: React.FC<ArrayContainerProps> = ({
-  column,
-  postDataArray,
-}) => {
+const ArrayContainer: React.FC<ArrayContainerProps> = ({ postDataArray }) => {
   let postDataArray1: any[] = [];
   let postDataArray2: any[] = [];
   let postDataArray3: any[] = [];
+
+  function windowWidth(): number {
+    if (window.innerWidth > 1000) return 3;
+    if (window.innerWidth <= 1000 && window.innerWidth > 400) return 2;
+    if (window.innerWidth <= 400) return 1;
+    return 3;
+  }
 
   if (postDataArray) {
     postDataArray.forEach((postData, index) => {
@@ -32,7 +36,10 @@ const ArrayContainer: React.FC<ArrayContainerProps> = ({
       <Container>
         {[postDataArray1, postDataArray2, postDataArray3].map(
           (postDataArray) => (
-            <PostArray postDataArray={postDataArray} />
+            <>
+              <PostArray postDataArray={postDataArray} />
+              <Spacing width="15px" />
+            </>
           )
         )}
       </Container>
