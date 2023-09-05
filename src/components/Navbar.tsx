@@ -84,7 +84,6 @@ const Container = styled.div`
   padding-bottom: 10px;
   position: fixed;
   bottom: 10px;
-  /* transform: translate(20%); */
   background-color: rgb(255, 255, 255);
   border-radius: 35px;
   display: flex;
