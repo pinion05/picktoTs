@@ -11,26 +11,21 @@ interface postData {
   postData: PostData;
 }
 const Post: React.FC<postData> = ({ postData }) => {
-  const userID = sessionStorage.getItem("userID");
-
-  const [isCheckVote, setIsCheckVote] = useState<boolean>();
-  const renderImgURL = `https://testbucket12342563.s3.ap-northeast-2.amazonaws.com/${postData.id}.${postData.img_extension}`;
-
   useEffect(() => {
     checkVote();
   }, []);
+  const postID = postData.id;
+  const userID = sessionStorage.getItem("userID");
+  const [isCheckVote, setIsCheckVote] = useState<boolean>();
+  const renderImgURL = `https://testbucket12342563.s3.ap-northeast-2.amazonaws.com/${postData.id}.${postData.img_extension}`;
 
   async function checkVote() {
-    const postID = postData.id;
-    console.log(`axios 호출하는 매게변수${postID} +  ${userID}`);
     try {
       const response = await axios.get(
         `http://localhost:5000/api/vote?postID=${postID}&userID=${userID}`
       );
-      console.log(response.data);
       if (response.data.length > 0) {
-        console.log(postData.id + `투표됨`);
-        setIsCheckVote(true);
+        await setIsCheckVote(true);
       }
     } catch (err) {
       console.log(err);
@@ -41,7 +36,7 @@ const Post: React.FC<postData> = ({ postData }) => {
     if (userID) {
       console.log(`ID = ${postData.id}투표 온클릭`);
       await voteAdd();
-      checkVote(); // 투표가 성공적으로 추가된 후에 checkVote 함수 호출하여 최신 데이터로 상태 업데이트
+      await checkVote(); // 투표가 성공적으로 추가된 후에 checkVote 함수 호출하여 최신 데이터로 상태 업데이트
     }
   }
 
@@ -72,7 +67,15 @@ const Post: React.FC<postData> = ({ postData }) => {
     }
   }
 
-  function postDelete(postID: string) {
+  async function postDelete() {
+    await voteDelete();
+    try {
+      const response = await axios.delete(
+        `http://localhost:5000/api/post/${postID}/${postData.img_extension}}`
+      );
+    } catch (err) {
+      console.log(err);
+    }
     console.log(`${postID} 삭제함`);
   }
 
@@ -86,12 +89,22 @@ const Post: React.FC<postData> = ({ postData }) => {
             {isCheckVote ? (
               <VoteChaeck
                 onClick={voteDelete}
-                style={{ fill: "green", height: "25px", width: "25px" }}
+                style={{
+                  cursor: "pointer",
+                  fill: "green",
+                  height: "25px",
+                  width: "25px",
+                }}
               />
             ) : (
               <VoteFalse
                 onClick={voteClick}
-                style={{ fill: "#bdbdbd", height: "25px", width: "25px" }}
+                style={{
+                  cursor: "pointer",
+                  fill: "#bdbdbd",
+                  height: "25px",
+                  width: "25px",
+                }}
               />
             )}
           </div>
@@ -100,10 +113,19 @@ const Post: React.FC<postData> = ({ postData }) => {
           <Spacing width="10px" />
           <span>{postData.post_name}</span>
           <Spacing width="20px" />
-          <TrashCan
-            onClick={() => postDelete(postData.id)}
-            style={{ width: `25px`, float: "left", fill: "#870000" }}
-          />
+          {window.location.href === `http://localhost:3000/profile` ? (
+            <TrashCan
+              onClick={postDelete}
+              style={{
+                cursor: "pointer",
+                width: `25px`,
+                float: "left",
+                fill: "#870000",
+              }}
+            />
+          ) : (
+            <></>
+          )}
         </Wrapdiv>
       </Formet>
     </Container>

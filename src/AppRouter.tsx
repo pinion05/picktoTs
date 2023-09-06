@@ -19,12 +19,22 @@ const AppRouther = () => {
         <Routes>
           <Route path="/home" element={<Home />} />
           <Route
+            path="/"
+            element={
+              <PrivateRoute
+                component={Home}
+                isAuthenticated={false}
+                path={`/home`}
+              />
+            }
+          />
+          <Route
             path="/upload"
             element={
               <PrivateRoute
                 component={Upload}
                 isAuthenticated={loginConditon}
-                path={`/upload`}
+                path={`/login`}
               />
             }
           />
@@ -37,7 +47,7 @@ const AppRouther = () => {
               <PrivateRoute
                 component={Profile}
                 isAuthenticated={loginConditon}
-                path={`/profile`}
+                path={`/login`}
               />
             }
           />
