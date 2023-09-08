@@ -2,13 +2,10 @@ import React from "react";
 import { useState } from "react";
 import { styled } from "styled-components";
 import { Button, Input } from "@mui/material";
-import { css } from "@emotion/react";
-import { green } from "@mui/material/colors";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useStore } from "../store";
 import { Spacing, Wrap } from "../styledComponent";
-import DatePicker from "react-datepicker";
 
 const Join = () => {
   //

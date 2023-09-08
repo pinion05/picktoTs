@@ -15,11 +15,10 @@ import axios from "axios";
 import React, { ChangeEvent, useEffect, useState } from "react";
 
 const Login: React.FC = () => {
+  const navigate = useNavigate();
   const { loginConditon, logout, login } = useStore();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-
-  //
   const logoImgs: ProviderIcon[] = [
     { name: "google", src: google },
     { name: "facebook", src: facebook },
@@ -27,73 +26,61 @@ const Login: React.FC = () => {
     { name: "apple", src: apple },
     { name: "guest", src: guest },
   ];
-  function submitContainer(e: any) {
-    e.preventDefault();
-  }
-  const navigate = useNavigate();
+  axios.defaults.withCredentials = true;
   function joinClick() {
     navigate("/join");
   }
-
   function isValidEmail(email: string) {
     const regex = /^[\w-_.]+@([\w-]+\.)+[\w-]{2,4}$/;
     return regex.test(email);
   }
 
   async function clickLogin() {
-    // console.log("login button click");
     try {
-      // console.log("enter try");
-      const userInfo = await emailPasswordRequset();
-      console.log(userInfo);
-
-      // console.log(userInfo);
-      if (userInfo.password === password) {
-        // console.log("비밀번호 일치");
-
-        if (isValidEmail(email)) {
-          // alert("로그인 이메일확인됨");
-          login();
-          navigate("/profile");
-          console.log("유저정보 일치");
-          sessionStorage.clear();
-          sessionStorage.setItem("userName", userInfo.nickname);
-          sessionStorage.setItem("userID", userInfo.id);
-          sessionStorage.setItem("userEmail", userInfo.email);
-        } else {
-          alert("이메일 형식이 맞지 않습니다.");
-        }
-      }
-    } catch {
-      if (email === "") {
-        alert("이메일을 입력해주세요");
-      } else {
-        alert("로그인실패함");
-        console.log("로그인 실패함");
-      }
-    }
-  }
-
-  async function emailPasswordRequset() {
-    try {
-      const response = await axios.post("http://localhost:5000/api/login", {
-        email: email,
-        password: password,
-      });
-      console.log(response);
-
-      if (response.status === 200) {
-        // console.log("유저 정보:", response.data[0]);
-        return response.data[0];
-        // 결과를 반환합니다.
-      } else {
-        console.log("유저 정보를 조회하는데 실패했습니다:", response.data);
-        return null;
-      }
+      const response = await axios.post(
+        "http://localhost:5000/api/login",
+        {
+          email: email,
+          password: password,
+        },
+        { withCredentials: true }
+      );
+      console.log("이메일,비밀번호 일치");
+      const userInfo = response.data;
+      sessionStorage.clear();
+      sessionStorage.setItem("userName", userInfo.nickname);
+      sessionStorage.setItem("userID", userInfo.id);
+      sessionStorage.setItem("userEmail", userInfo.email);
+      login();
+      navigate("/profile");
     } catch (err) {
       console.log(err);
+      alert("에러발생");
     }
   }
+
+  //
+  async function accessToken() {
+    try {
+      console.log("토큰검증시도");
+      const response = await axios.get(`http://localhost:5000/accesstoken`, {
+        withCredentials: true,
+      });
+      console.log(response);
+    } catch (err) {}
+  }
+
+  async function refreshToken() {
+    try {
+      console.log(`토큰 재발급 시도`);
+      const response = await axios.get(`http://localhost:5000/refreshtoken`, {
+        withCredentials: true,
+      });
+      console.log(response);
+    } catch (error) {}
+  }
+
+  async function emailPasswordRequset() {}
 
   function changeId(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     setEmail(e.target.value);
@@ -108,7 +95,11 @@ const Login: React.FC = () => {
   return (
     <>
       <Spacing height="100px" />
-      <Container onSubmit={submitContainer}>
+      <Button onClick={() => refreshToken()}>토큰 재발급하기</Button>
+      <Button onClick={() => accessToken()}>토큰 검증하기</Button>
+      <Spacing height="10px" />
+
+      <Container>
         <span>로그인</span>
         <Spacing height="15px" />
         <Input
@@ -146,7 +137,7 @@ const Login: React.FC = () => {
 };
 export default Login;
 
-const Container = styled.form`
+const Container = styled.div`
   width: 400px;
   height: 100%;
   background-color: #ffffff;

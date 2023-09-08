@@ -11,42 +11,35 @@ import moment, { months } from "moment";
 const Home: React.FC = () => {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
-  const [allPost, setAllPost] = useState<any>();
+  const [allPosts, setAllPosts] = useState<any>();
   const [renderPosts, setRenderPosts] = useState();
 
   useEffect(() => {
     getAllPost();
   }, []);
 
-  useEffect(() => {
-    setStartDate(new Date());
-    setEndDate(new Date());
-  }, [allPost]);
+  //!                             posts 테이블에서 모든 데이터를 가져옴
+  async function getAllPost() {
+    try {
+      const allPosts = await axios.get("http://localhost:5000/api/post");
+      setStartDate(new Date());
+      setEndDate(new Date());
+      await setAllPosts(allPosts.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   useEffect(() => {
     console.log("날자변경됨");
     changeDate();
   }, [startDate, endDate]);
 
-  //* allPost state애 값을 저장
-  async function getAllPost() {
-    try {
-      const allPosts = await axios.get("http://localhost:5000/api/post");
-      console.log("state에 저장되는 값--------------");
-      console.log(allPosts.data);
-      console.log("state에 저장되는 값--------------");
-
-      setAllPost(allPosts.data);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
   async function changeDate() {
-    if (allPost) {
+    if (allPosts) {
       const realStartDate = moment(startDate).startOf("day");
       const realEndtDate = moment(endDate).endOf("day");
-      const filterdarray = await allPost.filter((post: PostData) => {
+      const filterdarray = await allPosts.filter((post: PostData) => {
         const postDate = moment(post.date);
         if (postDate.isBetween(realStartDate, realEndtDate)) return true;
       });
