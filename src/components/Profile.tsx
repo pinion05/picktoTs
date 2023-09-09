@@ -90,8 +90,15 @@ const Profile: React.FC = () => {
             <Wrap dir="row">
               {/* <ProfileImg imgsrc={profileImg} /> */}
               {/* <Button>프로필 수정</Button> */}
-              <Button onClick={(e) => clickUpload(e)}>업로드</Button>
-              <Button onClick={() => clickLogout()}>로그아웃</Button>
+              <Button
+                style={{ height: "30px" }}
+                onClick={(e) => clickUpload(e)}
+              >
+                업로드
+              </Button>
+              <Button style={{ height: "30px" }} onClick={() => clickLogout()}>
+                로그아웃
+              </Button>
             </Wrap>
           </Wrap>
         </Head>
@@ -133,10 +140,10 @@ export default Profile;
 const Container = styled.div`
   width: auto;
   height: auto;
-  border-radius: 20px;
   flex-flow: column;
   align-items: center;
   justify-content: center;
+  display: flex;
   /* outline: black 1px solid; */
 `;
 

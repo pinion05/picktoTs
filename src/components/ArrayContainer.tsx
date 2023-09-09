@@ -2,6 +2,7 @@ import { styled } from "styled-components";
 import { PostData } from "../model/interfacePostData";
 import PostArray from "./PostArray";
 import { Spacing } from "../styledComponent";
+import { ShowAble } from "../model/ShowAble";
 
 interface ArrayContainerProps {
   postDataArray: Array<PostData> | undefined;
@@ -48,6 +49,10 @@ const ArrayContainer: React.FC<ArrayContainerProps> = ({ postDataArray }) => {
 };
 
 export default ArrayContainer;
+
+const Notification = styled.h1<ShowAble>`
+  display: ${(props) => (props.showAble ? "block" : "none")};
+`;
 
 const Container = styled.div`
   display: flex;

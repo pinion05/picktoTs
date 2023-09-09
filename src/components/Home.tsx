@@ -22,13 +22,15 @@ const Home: React.FC = () => {
   async function getAllPost() {
     try {
       const allPosts = await axios.get("http://localhost:5000/api/post");
-      setStartDate(new Date());
-      setEndDate(new Date());
       await setAllPosts(allPosts.data);
     } catch (error) {
       console.log(error);
     }
   }
+  useEffect(() => {
+    setStartDate(new Date());
+    setEndDate(new Date());
+  }, [allPosts]);
 
   useEffect(() => {
     console.log("날자변경됨");
@@ -80,6 +82,7 @@ const Home: React.FC = () => {
       <Spacing height="25px" />
 
       <WebTitle>PICKTO</WebTitle>
+
       <ArrayContainer postDataArray={renderPosts} />
     </>
   );

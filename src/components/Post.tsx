@@ -4,8 +4,10 @@ import { ReactComponent as VoteChaeck } from "../svg/vote-true.svg";
 import { ReactComponent as VoteFalse } from "../svg/vote-false.svg";
 import { PostData } from "../model/interfacePostData";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ReactComponent as TrashCan } from "../svg/trashcan.svg";
+import { ShowAble } from "../model/ShowAble";
+import { Button } from "@mui/material";
 
 interface postData {
   postData: PostData;
@@ -15,10 +17,21 @@ const Post: React.FC<postData> = ({ postData }) => {
   const userID = sessionStorage.getItem("userID");
   const [isCheckVote, setIsCheckVote] = useState<boolean>(false);
   const renderImgURL = `https://testbucket12342563.s3.ap-northeast-2.amazonaws.com/${postData.id}.${postData.img_extension}`;
+  const [showAble, setShowAble] = useState<boolean>(true);
+  const modalRef = useRef<HTMLDialogElement>(null);
+
+  function showModal() {
+    console.log(`모달실행`);
+    modalRef.current?.showModal();
+  }
+
+  function closeModal() {
+    modalRef.current?.close();
+  }
 
   useEffect(() => {
     checkVote();
-  }, []);
+  });
 
   async function checkVote() {
     try {
@@ -33,25 +46,19 @@ const Post: React.FC<postData> = ({ postData }) => {
     }
   }
 
-  async function clickVote() {
-    if (userID) {
-      console.log(`ID = ${postData.id}투표 온클릭`);
-      await voteAdd();
-      setIsCheckVote(!isCheckVote);
-    }
-  }
-
   async function voteAdd() {
-    try {
-      const response = await axios.post(`http://localhost:5000/api/vote`, {
-        postID: postID,
-        userID: userID,
-      });
-    } catch (err) {
-      console.error(err);
-      return;
+    if (userID) {
+      try {
+        const response = await axios.post(`http://localhost:5000/api/vote`, {
+          postID: postID,
+          userID: userID,
+        });
+        await setIsCheckVote(!isCheckVote);
+      } catch (err) {
+        console.error(err);
+        return;
+      }
     }
-    alert("투표됨");
   }
 
   async function voteDelete() {
@@ -61,57 +68,102 @@ const Post: React.FC<postData> = ({ postData }) => {
         `http://localhost:5000/api/vote/${postData.id}/${userID}`
       );
       console.log(respnse);
+      setIsCheckVote(!isCheckVote);
     } catch (err) {
       alert(`투표 취소중 에러가 발생했습니다.`);
     }
   }
 
   async function postDelete() {
-    await voteDelete();
     try {
+      await voteDelete();
       const response = await axios.delete(
         `http://localhost:5000/api/post/${postID}/${postData.img_extension}`
       );
     } catch (err) {
       console.log(err);
+      return;
     }
+    setShowAble(false);
     console.log(`${postID} 삭제함`);
+    alert("게시글 삭제됨");
   }
 
   return (
-    <Container>
-      <Img src={renderImgURL} alt="" />
-      <Formet>
-        <Wrapdiv>
-          <Spacing width="5px" />
+    <Container showAble={showAble}>
+      <dialog
+        style={{
+          border: "0px",
+          borderRadius: `10px`,
+          boxShadow: `0px 0px 10px 0px gray`,
+        }}
+        ref={modalRef}
+      >
+        <div
+          style={{
+            display: `flex`,
+            flexDirection: `column`,
+            alignItems: `center`,
+            justifyContent: `center`,
+            height: `100%`,
+            width: `100%`,
+          }}
+        >
           <div>
-            {isCheckVote ? (
-              <VoteChaeck
-                onClick={voteDelete}
-                style={{
-                  cursor: "pointer",
-                  fill: "green",
-                  height: "25px",
-                  width: "25px",
-                }}
-              />
-            ) : (
-              <VoteFalse
-                onClick={clickVote}
-                style={{
-                  cursor: "pointer",
-                  fill: "#bdbdbd",
-                  height: "25px",
-                  width: "25px",
-                }}
-              />
-            )}
+            <Spacing width="5px" />
           </div>
-          <Spacing width="5px" />
-          <span>{`  : 0`}</span>
-          <Spacing width="10px" />
+          <img style={{ height: "40vw" }} src={renderImgURL} alt="" />
+          <VoteChaeck
+            onClick={voteDelete}
+            style={{
+              cursor: "pointer",
+              fill: "green",
+              height: "25px",
+              width: "25px",
+              display: `${isCheckVote === true ? `block` : `none`}`,
+            }}
+          />
+          <VoteFalse
+            onClick={voteAdd}
+            style={{
+              cursor: "pointer",
+              fill: "#bdbdbd",
+              height: "25px",
+              width: "25px",
+              display: `${isCheckVote === false ? `block` : `none`}`,
+            }}
+          />
+          <button onClick={closeModal}>X</button>
+        </div>
+      </dialog>
+      <Img onClick={showModal} src={renderImgURL} alt="" />
+      <Formet>
+        <Wrapdiv style={{ display: `flex`, justifyContent: `space-between` }}>
+          <div>
+            <Spacing width="5px" />
+            <VoteChaeck
+              onClick={voteDelete}
+              style={{
+                cursor: "pointer",
+                fill: "green",
+                height: "25px",
+                width: "25px",
+                display: `${isCheckVote === true ? `block` : `none`}`,
+              }}
+            />
+            <VoteFalse
+              onClick={voteAdd}
+              style={{
+                cursor: "pointer",
+                fill: "#bdbdbd",
+                height: "25px",
+                width: "25px",
+                display: `${isCheckVote === false ? `block` : `none`}`,
+              }}
+            />
+          </div>
+
           <span>{postData.post_name}</span>
-          <Spacing width="20px" />
           {window.location.href === `http://localhost:3000/profile` ? (
             <TrashCan
               onClick={postDelete}
@@ -120,6 +172,7 @@ const Post: React.FC<postData> = ({ postData }) => {
                 width: `25px`,
                 float: "left",
                 fill: "#870000",
+                justifySelf: "end",
               }}
             />
           ) : (
@@ -132,7 +185,8 @@ const Post: React.FC<postData> = ({ postData }) => {
 };
 export default Post;
 
-const Container = styled.div`
+const Container = styled.div<ShowAble>`
+  display: ${(props) => (props.showAble === true ? `box` : `none`)};
   width: 100%;
   height: auto;
   box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.2);
@@ -159,7 +213,6 @@ const Formet = styled.div`
 `;
 
 const Wrapdiv = styled.div`
-  align-items: center;
   display: flex;
   flex-flow: row nowrap;
   /* outline: auto; */

@@ -13,12 +13,14 @@ const ProviderButton: React.FC<ProviderIcon> = ({ name, src }) => {
   //
   //
   //
-  const containerSubmit = () => {};
+  const click = () => {
+    alert("업데이트 예정");
+  };
   //
   //
   return (
     <>
-      <Button onClick={containerSubmit}>
+      <Button onClick={() => click()}>
         <LogoImg src={src} />
         <Spacing width="100px" />
         <span>Continue with {name} </span>
