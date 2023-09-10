@@ -13,6 +13,7 @@ const Home: React.FC = () => {
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [allPosts, setAllPosts] = useState<any>();
   const [renderPosts, setRenderPosts] = useState();
+  axios.defaults.withCredentials = true;
 
   useEffect(() => {
     getAllPost();
@@ -21,7 +22,7 @@ const Home: React.FC = () => {
   //!                             posts 테이블에서 모든 데이터를 가져옴
   async function getAllPost() {
     try {
-      const allPosts = await axios.get("http://localhost:5000/api/post");
+      const allPosts = await axios.get("http://localhost:5000/post");
       await setAllPosts(allPosts.data);
     } catch (error) {
       console.log(error);

@@ -38,7 +38,7 @@ const Login: React.FC = () => {
   async function clickLogin() {
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/login",
+        "http://localhost:5000/login",
         {
           email: email,
           password: password,

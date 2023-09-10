@@ -40,7 +40,7 @@ const Join = () => {
       //   email: email,
       //   password: password,
       // };
-      const resqonse = await axios.post("http://localhost:5000/api/register", {
+      const resqonse = await axios.post("http://localhost:5000/register", {
         nickname: nickname,
         email: email,
         password: password,

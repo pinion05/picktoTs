@@ -8,6 +8,7 @@ import { useEffect, useRef, useState } from "react";
 import { ReactComponent as TrashCan } from "../svg/trashcan.svg";
 import { ShowAble } from "../model/ShowAble";
 import { Button } from "@mui/material";
+import cookie from "react-cookies";
 
 interface postData {
   postData: PostData;
@@ -19,6 +20,8 @@ const Post: React.FC<postData> = ({ postData }) => {
   const renderImgURL = `https://testbucket12342563.s3.ap-northeast-2.amazonaws.com/${postData.id}.${postData.img_extension}`;
   const [showAble, setShowAble] = useState<boolean>(true);
   const modalRef = useRef<HTMLDialogElement>(null);
+
+  axios.defaults.withCredentials = true;
 
   function showModal() {
     console.log(`모달실행`);
@@ -36,7 +39,8 @@ const Post: React.FC<postData> = ({ postData }) => {
   async function checkVote() {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/vote?postID=${postID}&userID=${userID}`
+        `http://localhost:5000/api/vote?postID=${postID}&userID=${userID}`,
+        { headers: { Authorization: "bearer" + cookie.load("accessToken") } }
       );
       if (response.data.length > 0) {
         await setIsCheckVote(true);

@@ -4,6 +4,7 @@ import { Button } from "@mui/material";
 import { Spacing, Wrap } from "../styledComponent";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
+import cookie from "react-cookies";
 
 const Upload: React.FC = () => {
   const imgRef = useRef<HTMLInputElement>(null);
@@ -13,6 +14,7 @@ const Upload: React.FC = () => {
   const [previewImg, setPreviewImg] = useState<string>(
     "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg"
   );
+  axios.defaults.withCredentials = true;
   //
 
   //*인풋의 이미지가 변경될때 동시에 실행됨
@@ -46,6 +48,8 @@ const Upload: React.FC = () => {
 
   //* 업로드 버튼을 누르면 동시에 작동됨
   async function submitForm(e: FormEvent) {
+    console.log(cookie.load("accessToken"));
+
     e.preventDefault();
 
     if (currentFile) {
@@ -75,7 +79,11 @@ const Upload: React.FC = () => {
           "http://localhost:5000/api/post",
           formData,
           {
-            headers: { "Content-Type": "multipart/form-data" },
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: "bearer" + cookie.load("accessToken"),
+            },
+            withCredentials: true,
           }
         );
         console.log(response);
