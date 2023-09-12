@@ -14,6 +14,18 @@ import { Spacing } from "../styledComponent";
 import axios from "axios";
 import React, { ChangeEvent, useEffect, useState } from "react";
 
+export async function refreshToken() {
+  try {
+    console.log(`토큰 재발급 시도`);
+    const response = await axios.get(`http://localhost:5000/refreshtoken`, {
+      withCredentials: true,
+    });
+    console.log(response);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 const Login: React.FC = () => {
   const navigate = useNavigate();
   const { loginConditon, logout, login } = useStore();
@@ -68,16 +80,6 @@ const Login: React.FC = () => {
       });
       console.log(response);
     } catch (err) {}
-  }
-
-  async function refreshToken() {
-    try {
-      console.log(`토큰 재발급 시도`);
-      const response = await axios.get(`http://localhost:5000/refreshtoken`, {
-        withCredentials: true,
-      });
-      console.log(response);
-    } catch (error) {}
   }
 
   async function emailPasswordRequset() {}

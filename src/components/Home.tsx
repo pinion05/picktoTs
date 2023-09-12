@@ -6,16 +6,18 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { PostData } from "../model/interfacePostData";
 import { Spacing, Wrap } from "../styledComponent";
-import moment, { months } from "moment";
+import moment from "moment";
+import { Cookies } from "react-cookie";
 
 const Home: React.FC = () => {
+  const cookies = new Cookies();
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [allPosts, setAllPosts] = useState<any>();
   const [renderPosts, setRenderPosts] = useState();
   axios.defaults.withCredentials = true;
-
   useEffect(() => {
+    console.log(cookies.get("accessToken"));
     getAllPost();
   }, []);
 

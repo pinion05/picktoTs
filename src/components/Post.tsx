@@ -8,7 +8,8 @@ import { useEffect, useRef, useState } from "react";
 import { ReactComponent as TrashCan } from "../svg/trashcan.svg";
 import { ShowAble } from "../model/ShowAble";
 import { Button } from "@mui/material";
-import cookie from "react-cookies";
+import { Cookies } from "react-cookie";
+import { refreshToken } from "./Login";
 
 interface postData {
   postData: PostData;
@@ -20,6 +21,7 @@ const Post: React.FC<postData> = ({ postData }) => {
   const renderImgURL = `https://testbucket12342563.s3.ap-northeast-2.amazonaws.com/${postData.id}.${postData.img_extension}`;
   const [showAble, setShowAble] = useState<boolean>(true);
   const modalRef = useRef<HTMLDialogElement>(null);
+  const cookies = new Cookies();
 
   axios.defaults.withCredentials = true;
 
@@ -40,12 +42,14 @@ const Post: React.FC<postData> = ({ postData }) => {
     try {
       const response = await axios.get(
         `http://localhost:5000/api/vote?postID=${postID}&userID=${userID}`,
-        { headers: { Authorization: "bearer" + cookie.load("accessToken") } }
+        { headers: { Authorization: `Bearer ${cookies.get("accessToken")}` } }
       );
       if (response.data.length > 0) {
         await setIsCheckVote(true);
       }
     } catch (err) {
+      refreshToken();
+      checkVote();
       console.log(err);
     }
   }
@@ -53,12 +57,21 @@ const Post: React.FC<postData> = ({ postData }) => {
   async function voteAdd() {
     if (userID) {
       try {
-        const response = await axios.post(`http://localhost:5000/api/vote`, {
-          postID: postID,
-          userID: userID,
-        });
+        const response = await axios.post(
+          `http://localhost:5000/api/vote`,
+          {
+            postID: postID,
+            userID: userID,
+          },
+          { headers: { Authorization: `Bearer ${cookies.get("accessToken")}` } }
+        );
         await setIsCheckVote(!isCheckVote);
       } catch (err) {
+        try {
+          refreshToken();
+        } catch (error) {
+          console.log(`토큰 재발급 실패`);
+        }
         console.error(err);
         return;
       }
@@ -69,12 +82,18 @@ const Post: React.FC<postData> = ({ postData }) => {
     console.log(`투표취소${postData.id}`);
     try {
       const respnse = await axios.delete(
-        `http://localhost:5000/api/vote/${postData.id}/${userID}`
+        `http://localhost:5000/api/vote/${postData.id}/${userID}`,
+        { headers: { Authorization: `Bearer ${cookies.get("accessToken")}` } }
       );
       console.log(respnse);
       setIsCheckVote(!isCheckVote);
     } catch (err) {
       alert(`투표 취소중 에러가 발생했습니다.`);
+      try {
+        await refreshToken();
+      } catch (error) {
+        console.log(`토큰 재발급실패`);
+      }
     }
   }
 
@@ -82,7 +101,8 @@ const Post: React.FC<postData> = ({ postData }) => {
     try {
       await voteDelete();
       const response = await axios.delete(
-        `http://localhost:5000/api/post/${postID}/${postData.img_extension}`
+        `http://localhost:5000/api/post/${postID}/${postData.img_extension}`,
+        { headers: { Authorization: "Bearer" + cookies.get("accessToken") } }
       );
     } catch (err) {
       console.log(err);
