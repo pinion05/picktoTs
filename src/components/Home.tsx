@@ -8,9 +8,13 @@ import { PostData } from "../model/interfacePostData";
 import { Spacing, Wrap } from "../styledComponent";
 import moment from "moment";
 import { Cookies } from "react-cookie";
+import Radio from "@mui/material/Radio";
+import { Box, FormControlLabel, RadioGroup } from "@mui/material";
+import { type } from "os";
 
 const Home: React.FC = () => {
   const cookies = new Cookies();
+  const [selectedValue, setSelectedValue] = useState<string>("time");
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [allPosts, setAllPosts] = useState<any>();
@@ -20,6 +24,8 @@ const Home: React.FC = () => {
     console.log(cookies.get("accessToken"));
     getAllPost();
   }, []);
+
+  //!                             post들의 좋아요수 반환 + 원본 오브젝트에 새로운 프로퍼티 추가해야함
 
   //!                             posts 테이블에서 모든 데이터를 가져옴
   async function getAllPost() {
@@ -40,6 +46,7 @@ const Home: React.FC = () => {
     changeDate();
   }, [startDate, endDate]);
 
+  //!                                 날자로  랜더링 필터 필터링
   async function changeDate() {
     if (allPosts) {
       const realStartDate = moment(startDate).startOf("day");
@@ -52,6 +59,10 @@ const Home: React.FC = () => {
       setRenderPosts(filterdarray);
     }
   }
+  const handleChange = (e: any) => {
+    console.log("e.target.value: ", e.target.value);
+    setSelectedValue(e.target.value);
+  };
 
   return (
     <>
@@ -82,6 +93,23 @@ const Home: React.FC = () => {
           minDate={startDate}
         />
       </Wrap>
+      <Box sx={{ display: "flex", gap: 2 }}>
+        <RadioGroup row name="row-radio-buttons-group">
+          <FormControlLabel
+            value="time"
+            control={<Radio />}
+            label="최근"
+            onChange={handleChange}
+            defaultChecked={true}
+          />
+          <FormControlLabel
+            value="vote"
+            control={<Radio />}
+            label="인기"
+            onChange={handleChange}
+          />
+        </RadioGroup>
+      </Box>
       <Spacing height="25px" />
 
       <WebTitle>PICKTO</WebTitle>

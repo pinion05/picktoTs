@@ -41,7 +41,7 @@ const Post: React.FC<postData> = ({ postData }) => {
   async function checkVote() {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/vote?postID=${postID}&userID=${userID}`,
+        `http://localhost:5000/vote?postID=${postID}&userID=${userID}`,
         { headers: { Authorization: `Bearer ${cookies.get("accessToken")}` } }
       );
       if (response.data.length > 0) {
@@ -49,7 +49,7 @@ const Post: React.FC<postData> = ({ postData }) => {
       }
     } catch (err) {
       refreshToken();
-      checkVote();
+      // checkVote();
       console.log(err);
     }
   }
