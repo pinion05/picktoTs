@@ -14,7 +14,8 @@ import { refreshToken } from "./Login";
 interface postData {
   postData: PostData;
 }
-const Post: React.FC<postData> = ({ postData }) => {
+
+const Post = ({ postData }: postData): JSX.Element => {
   const postID = postData.id;
   const userID = sessionStorage.getItem("userID");
   const [isCheckVote, setIsCheckVote] = useState<boolean>(false);

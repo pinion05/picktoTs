@@ -26,6 +26,7 @@ const Home: React.FC = () => {
   }, []);
 
   //!                             post들의 좋아요수 반환 + 원본 오브젝트에 새로운 프로퍼티 추가해야함
+  function coutVote() {}
 
   //!                             posts 테이블에서 모든 데이터를 가져옴
   async function getAllPost() {
