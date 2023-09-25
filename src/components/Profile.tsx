@@ -13,7 +13,7 @@ import DatePicker from "react-datepicker";
 import { PostData } from "../model/interfacePostData";
 import moment from "moment";
 
-const Profile: React.FC = () => {
+const Profile = (): JSX.Element => {
   const { loginConditon, logout, login, setUserName, userName } = useStore();
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);

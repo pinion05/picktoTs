@@ -26,7 +26,7 @@ export async function refreshToken() {
   }
 }
 
-const Login: React.FC = () => {
+const Login = (): JSX.Element => {
   const navigate = useNavigate();
   const { loginConditon, logout, login } = useStore();
   const [email, setEmail] = useState<string>("");

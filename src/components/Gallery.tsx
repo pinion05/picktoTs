@@ -1,4 +1,4 @@
-const Gallery: React.FC = () => {
+const Gallery = (): JSX.Element => {
   return (
     <>
       <></>

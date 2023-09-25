@@ -7,11 +7,11 @@ interface PrivateRouteProps {
   path: string;
 }
 
-const PrivateRoute: React.FC<PrivateRouteProps> = ({
+const PrivateRoute = ({
   component: Component,
   isAuthenticated,
   path,
-}) => {
+}: PrivateRouteProps): JSX.Element => {
   return isAuthenticated ? <Component /> : <Navigate to={path} replace />;
 };
 

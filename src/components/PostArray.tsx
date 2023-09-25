@@ -8,7 +8,7 @@ interface ArrayContainerProps {
   postDataArray: Array<PostData> | undefined;
 }
 
-const PostArray: React.FC<ArrayContainerProps> = ({ postDataArray }) => {
+const PostArray = ({ postDataArray }: ArrayContainerProps): JSX.Element => {
   return (
     <>
       <Contianer>

@@ -4,4 +4,5 @@ export interface PostData {
   post_name: string;
   uploader_id: number;
   img_extension: string;
+  votecount?: number;
 }

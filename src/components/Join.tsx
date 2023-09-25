@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useStore } from "../store";
 import { Spacing, Wrap } from "../styledComponent";
 
-const Join = () => {
+const Join = (): JSX.Element => {
   //
   const navigate = useNavigate();
   const [nickname, setNickname] = useState<string>("");

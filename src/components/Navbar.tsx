@@ -15,7 +15,7 @@ import "../css/navbar.css";
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-const Navbar: React.FC = () => {
+const Navbar = (): JSX.Element => {
   const [selectIcon, setSelectIcon] = useState<number>(0);
 
   if (useLocation().pathname === "/home") {

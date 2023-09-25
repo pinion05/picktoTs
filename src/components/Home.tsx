@@ -12,21 +12,25 @@ import Radio from "@mui/material/Radio";
 import { Box, FormControlLabel, RadioGroup } from "@mui/material";
 import { type } from "os";
 
-const Home: React.FC = () => {
+const Home = (): JSX.Element => {
   const cookies = new Cookies();
-  const [selectedValue, setSelectedValue] = useState<string>("time");
+  const [selectedValue, setSelectedValue] = useState<string>("recently");
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [allPosts, setAllPosts] = useState<any>();
   const [renderPosts, setRenderPosts] = useState();
   axios.defaults.withCredentials = true;
+
   useEffect(() => {
-    console.log(cookies.get("accessToken"));
+    // console.log(cookies.get("accessToken"));
     getAllPost();
   }, []);
 
   //!                             post들의 좋아요수 반환 + 원본 오브젝트에 새로운 프로퍼티 추가해야함
-  function coutVote() {}
+  function coutfamouse() {
+    try {
+    } catch (error) {}
+  }
 
   //!                             posts 테이블에서 모든 데이터를 가져옴
   async function getAllPost() {
@@ -43,7 +47,7 @@ const Home: React.FC = () => {
   }, [allPosts]);
 
   useEffect(() => {
-    console.log("날자변경됨");
+    // console.log("날자변경됨");
     changeDate();
   }, [startDate, endDate]);
 
@@ -52,15 +56,29 @@ const Home: React.FC = () => {
     if (allPosts) {
       const realStartDate = moment(startDate).startOf("day");
       const realEndtDate = moment(endDate).endOf("day");
+
       const filterdarray = await allPosts.filter((post: PostData) => {
         const postDate = moment(post.date);
         if (postDate.isBetween(realStartDate, realEndtDate)) return true;
       });
 
+      // const sortFilterArray = filterdarray.map((ele: PostData) => {
+      //   try {
+      //     const response = await axios.get(
+      //       `'http://localhost:5000/voteCount'${ele.id}`
+      //     );
+      //     ele.votecount = response.data.length;
+      //   } catch (error) {
+      //     console.log(`좋아요갯수 조회중 에러`);
+      //     console.log(error);
+      //   }
+      // });
+
       setRenderPosts(filterdarray);
     }
   }
-  const handleChange = (e: any) => {
+
+  const handleRadioChange = (e: any) => {
     console.log("e.target.value: ", e.target.value);
     setSelectedValue(e.target.value);
   };
@@ -95,20 +113,14 @@ const Home: React.FC = () => {
         />
       </Wrap>
       <Box sx={{ display: "flex", gap: 2 }}>
-        <RadioGroup row name="row-radio-buttons-group">
-          <FormControlLabel
-            value="time"
-            control={<Radio />}
-            label="최근"
-            onChange={handleChange}
-            defaultChecked={true}
-          />
-          <FormControlLabel
-            value="vote"
-            control={<Radio />}
-            label="인기"
-            onChange={handleChange}
-          />
+        <RadioGroup
+          row
+          name="row-radio-buttons-group"
+          defaultValue={`recently`}
+          onChange={handleRadioChange}
+        >
+          <FormControlLabel value="recently" control={<Radio />} label="최근" />
+          <FormControlLabel value="famouse" control={<Radio />} label="인기" />
         </RadioGroup>
       </Box>
       <Spacing height="25px" />

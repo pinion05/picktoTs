@@ -5,7 +5,7 @@ import { useStore } from "../store";
 import { Spacing } from "../styledComponent";
 import { Button } from "@mui/material";
 //
-const ProviderButton: React.FC<ProviderIcon> = ({ name, src }) => {
+const ProviderButton = ({ name, src }: ProviderIcon): JSX.Element => {
   //
   const { loginConditon, logout, login, setUserName } = useStore();
   //

@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 import { Cookies } from "react-cookie";
 
-const Upload: React.FC = () => {
+const Upload = (): JSX.Element => {
   const imgRef = useRef<HTMLInputElement>(null);
   const [currentFile, setCurrentFile] = useState<File>();
   const [postName, setPostName] = useState<string>("");
